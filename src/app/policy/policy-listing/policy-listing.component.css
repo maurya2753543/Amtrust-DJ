@@ -1,0 +1,38 @@
+.mat-form-field {
+    color: black;
+    width: 500px !important;
+}
+
+.example-card {
+    float: left;
+    margin-bottom: 2em;
+    margin-right: 1em;
+    background: #f6f6f6;
+    box-shadow: none;
+}
+
+.div-tile {
+    padding-top: 2px !important;
+}
+
+a {
+    color: black;
+}
+
+a:hover {
+    color: #2EB5C7 !important;
+}
+
+.mat-grid-tile {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.grid-column {
+    font-size: 14px;
+}
+
+.chip {
+    color: white;
+    background-color: #2EB5C7;
+}

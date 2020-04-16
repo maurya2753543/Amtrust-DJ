@@ -1,0 +1,64 @@
+<div *ngIf="!toggleBatchSummary">
+  <h1 class="heading" style="margin-left: 10px !important;">
+    AMS Policy Upload
+  </h1>
+</div>
+<div class="div-padding">
+    <div>
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="!responseReceived">
+                            <div>
+                                    <mat-label class="label-claim">File Type: </mat-label>&nbsp;&nbsp;&nbsp;
+                                     <mat-radio-group aria-label="Select action" formControlName="uploadAction">
+                                             <mat-radio-button value="NEW_SALES" [checked]="true">New Sales</mat-radio-button>&nbsp;&nbsp;&nbsp;
+                                             <mat-radio-button value="CANCEL_UPLOAD" *ngIf="this.showCancellationOption">Cancellation</mat-radio-button>
+                                     </mat-radio-group>
+                            </div>
+                        <div style="width:350px !important;">
+                            <span class="errMsg">{{errMsg}}</span>
+                            <select (change)="selectClientName($event)" style="width:349px;height:32px;margin-bottom:12px;">
+                                <option value="">Select client name</option>
+                                <option value={{clientName.partnerId}} *ngFor="let clientName of clientNames">
+                                    {{clientName.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="file" accept=".csv, text/csv" formControlName="fileUploaded"
+                                (change)="onSelectedFile($event)" style="width: 336px;
+                            display: block;
+                            background-color: #f6f6f6;
+                            border: 1px solid rgb(166, 166, 166);
+                            padding: 6px;
+                            border-radius: 5px;" />
+                        </div>
+                        <div>
+                            <button mat-button type="submit" style="margin-top: 10px !important;"
+                                class="div-padding-button">Upload</button>
+                        </div>
+                    </div>
+                    <div *ngIf="fileUpload && fileUpload.status && fileUpload.status==='complete' && !toggleBatchSummary">
+                        <section class="section">
+                            <mat-card style="display: contents !important;">
+                                <mat-card-title>Congratulations!</mat-card-title>
+                                <mat-card-subtitle>{{fileUpload.message}}</mat-card-subtitle>
+                                <mat-card-footer>
+                                    <span class="batch-message">Your batch id</span>
+                                    <br><br>
+                                    <div class="batch-id">{{fileUpload.transactionId}}</div>
+                                    <button mat-button style="margin-top: 10px !important;" (click)="displaySummary()"
+                                        class="div-padding-button">Track
+                                        your batch id</button>
+                                </mat-card-footer>
+                            </mat-card>
+                        </section>
+                    </div>
+                    <div *ngIf="toggleBatchSummary">
+                        <app-policy-batch-summary batchId={{fileUpload.transactionId}}></app-policy-batch-summary>
+                    </div>
+                    <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#FFFFFF" type="ball-fussion">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                </form>
+    </div>
+</div>

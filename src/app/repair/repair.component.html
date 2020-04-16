@@ -1,0 +1,60 @@
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
+
+<h2 mat-dialog-title style="font-weight:800">Repair Status</h2>
+<mat-dialog-content class="mat-typography">
+
+
+  <table>
+    <tr>
+      <td><b>ASC Code</b></td>
+      <td>{{data.content.case.ascCode}}</td>
+    </tr>
+    <tr>
+      <td><b>Loss Type</b></td>
+      <td>{{data.content.case.lossTypeDescription}}</td>
+    </tr>
+    <tr>
+      <td><b>Status</b></td>
+      <td>{{data.content.case.statusDescription}}</td>
+    </tr>
+    <tr>
+      <td><b>Country</b></td>
+      <td>{{data.content.case.countryDescription}}</td>
+    </tr>
+    <tr>
+      <td><b>Total Part Cost</b></td>
+      <td>{{data.content.case.totalPartCost}}</td>
+    </tr>
+    <tr>
+      <td><b>Labor Cost</b></td>
+      <td>{{data.content.case.laborCost}}</td>
+    </tr>
+    <tr>
+      <td><b>Reason Code</b></td>
+      <td>{{data.content.case.reasonCode}}</td>
+    </tr>
+    <tr>
+      <td><b>Reason Remark</b></td>
+      <td>{{data.content.case.reasonRemark}}</td>
+    </tr>
+  </table>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

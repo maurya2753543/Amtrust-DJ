@@ -1,0 +1,876 @@
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+  <div class="leftHalf" fxFlex="4%">
+    <!-- <img src="assets/images/LG.png" style="margin-top: 50px;width: 77%;display: block;margin-left: 10%;" /> -->
+  </div>
+  <div class="rightHalf" fxFlex="70%">
+
+    <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+      <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+    <div>
+      <div class="row logo-container">
+        <span>
+          <div class="logo-container">
+            <img src="./assets/images/digiLogo.png" class="img-container"/>
+          </div>
+          <h1 class="heading-container">
+            {{pageHeadingArray[currentActiveTab]}}
+          </h1>
+        </span>
+      </div>
+      <div class="row">
+        <form [formGroup]="partnerOnboardingForm">
+          <mat-card>
+            <mat-tab-group mat-stretch-tabs style="height: intrinsic;">
+              <mat-tab *ngIf="currentActiveTab == 0" label="Information">
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="customerDetailPanel">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Customer Details</b>
+                          <mat-error *ngIf="customerInfoValidationFailed" class="mat-error-panel">
+                            <b>{{panelErrorMessage}}</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Customer's Name</mat-label>
+                                <input (input)="partnerPolicy.customerName=$event.target.value"
+                                  formControlName="customerName" placeholder="Customer's Name" matInput required
+                                  type="text">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('customerDetailPanel').get('customerName').hasError('emptyCheckFailed')">
+                                  Name cannot be empty
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('customerDetailPanel').get('customerName').hasError('numberCheckFailed')">
+                                  No Number allowed
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">ID Type</mat-label>
+                                <mat-select [(value)]="partnerPolicy.idType" formControlName="idType"
+                                  placeholder="Select Id Type">
+                                  <mat-option value="IC">IC</mat-option>
+                                  <mat-option value="Passport">Passport</mat-option>
+                                </mat-select>
+                                <!-- <mat-error>ID Type cannot be empty</mat-error> -->
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">ID No.</mat-label>
+                                <input (input)="partnerPolicy.custIdNumber=$event.target.value"
+                                  placeholder="Customer Id Number" formControlName="customerId" matInput type="text">
+                                <!-- <mat-error>ID No. cannot be empty</mat-error> -->
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field class="example-full-width">
+                                <mat-label class="label-policy">Mobile</mat-label>
+                                <span matPrefix>60 &nbsp;</span>
+                                <input type="text" matInput placeholder="xxxx-xxxx-xxxx"
+                                  (input)="partnerPolicy.custMobileNumber=$event.target.value"
+                                  formControlName="custMobileNumber" required maxlength="12">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('customerDetailPanel').get('custMobileNumber').hasError('emptyCheckFailed')">
+                                  Mobile no. cannot be empty
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('customerDetailPanel').get('custMobileNumber').hasError('nonNumberCheckFailed')">
+                                  Only Number allowed
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Email</mat-label>
+                                <input (input)="partnerPolicy.customerEmail=$event.target.value"
+                                  placeholder="Customer Email" formControlName="customerEmail" matInput type="text">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('customerDetailPanel').get('customerEmail').hasError('emailValidationFailed')">
+                                  Email does not follow valid pattern
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <mat-form-field appearance="outline">
+                              <input (keyup)="autoCompleteSearch($event)" matInput placeholder="Search Address"
+                                [matAutocomplete]="auto">
+                              <mat-icon matSuffix>search</mat-icon>
+                            </mat-form-field>
+                            <mat-autocomplete #auto="matAutocomplete">
+                              <mat-option *ngFor=" let item of searchList" matTooltip="{{item.description}}"
+                                matTooltipClass="autocomplete-tooltip"
+                                (onSelectionChange)="setAddress(item.placeId,item.country)">
+                                {{item.description}}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Address</mat-label>
+                                <input (input)="partnerPolicy.custAddress.address1=$event.target.value"
+                                  placeholder="Customer Address" formControlName="custAddress" matInput type="text">
+                                <!-- <mat-error>Address cannot be empty</mat-error> -->
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Postal Code</mat-label>
+                                <input (input)="partnerPolicy.custAddress.postalCode=$event.target.value"
+                                  placeholder="Customer Postal Code" formControlName="postalCode" matInput type="text">
+                                <!-- <mat-error>Postal code cannot be empty</mat-error> -->
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">City</mat-label>
+                                <input (input)="partnerPolicy.custAddress.customerCity=$event.target.value"
+                                  placeholder="Customer City" formControlName="customerCity" matInput type="text">
+                                <!-- <mat-error>City cannot be empty</mat-error> -->
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">State</mat-label>
+                                <input placeholder="Customer State"
+                                  (input)="partnerPolicy.custAddress.customerState=$event.target.value"
+                                  formControlName="customerState" matInput type="text">
+                                <!-- <mat-error>State cannot be empty</mat-error> -->
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-select (selectionChange)="resetCountry($event)"
+                                  formControlName="customerCountryCode" placeholder="Country">
+                                  <mat-option *ngFor="let country of countries" [value]="country.twoCharCode">
+                                    {{country.name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+
+                  </mat-card>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="deviceDetailPanel">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Device Details</b>
+                          <mat-error *ngIf="deviceInfoValidationFailed" class="mat-error-panel">
+                            <b>{{panelErrorMessage}}</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">IMEI</mat-label>
+                                <input (input)="partnerPolicy.policyIMEINumber=$event.target.value"
+                                  placeholder="Policy IMEI No." formControlName="policyIMEINumber" matInput type="text"
+                                  required maxlength="15">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('policyIMEINumber').hasError('bothIMEIandSerialNumberEmpty') ||
+                                  partnerOnboardingForm.get('deviceDetailPanel').get('policyIMEINumber').hasError('required')">
+                                  IMEI cannot be left blank
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('policyIMEINumber').hasError('invalidFormat')">
+                                  Numerical values only
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('policyIMEINumber').hasError('invalidLength')">
+                                  Must be 15 digit number
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('policyIMEINumber').hasError('luhnCheckNotFollowed')">
+                                  The IMEI number you have entered is invalid. Please try again.
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('policyIMEINumber').hasError('nonUniqueImei')">
+                                  The device IMEI is registered in the system. Please check your IMEI.
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Serial No.</mat-label>
+                                <input (input)="partnerPolicy.deviceSerialNo=$event.target.value"
+                                  placeholder="Device Serial No." formControlName="deviceSerialNo" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Make *</mat-label>
+                                <input (input)="partnerPolicy.deviceMake=$event.target.value" placeholder="Device Make"
+                                  formControlName="deviceMake" matInput type="text" [readonly]="true">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('deviceMake').hasError('makeCheckFailed')">
+                                  Device Make canot be empty
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Model *</mat-label>
+                                <input (input)="partnerPolicy.deviceModel=$event.target.value"
+                                  placeholder="Device Model No." formControlName="deviceModel" matInput type="text"
+                                  [readonly]="true">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('deviceModel').hasError('modelCheckFailed')">
+                                  Device Model canot be empty
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Device Capacity (GB)</mat-label>
+                                <input (input)="partnerPolicy.deviceCapacity=$event.target.value"
+                                  placeholder="Device Capacity (GB)" formControlName="deviceCapacity" matInput required
+                                  type="text">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('deviceCapacity').hasError('emptyCheckFailed')">
+                                  Device capacity cannot be empty
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('deviceCapacity').hasError('nonNumberCheckFailed')">
+                                  Only numeric value can be entered e.g. 32, 64, 128
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Color</mat-label>
+                                <input (input)="partnerPolicy.deviceColor=$event.target.value"
+                                  placeholder="Device Color" formControlName="deviceColor" matInput required
+                                  type="text">
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('deviceColor').hasError('emptyCheckFailed')">
+                                  Device color cannot be empty
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="partnerOnboardingForm.get('deviceDetailPanel').get('deviceColor').hasError('nonAlphabeticCheckFailed')">
+                                  No special character or number allowed, Only alphabets
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="staffDetailPanel">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Staff Details</b>
+                          <mat-error *ngIf="staffInfoValidationFailed" class="mat-error-panel">
+                            <b>{{panelErrorMessage}}</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Staff Name</mat-label>
+                                <input (input)="partnerPolicy.salesRepName=$event.target.value" placeholder="Staff Name"
+                                  formControlName="staffName" matInput type="text" required>
+                                <mat-error>
+                                  Staff Name cannot be left blank
+                                </mat-error>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Store Name</mat-label>
+                                <mat-select [(value)]="partnerPolicy.storeName" formControlName="storeName"
+                                  placeholder="Select Store Name" required>
+                                  <mat-option *ngFor="let store of partnerStoresName" [value]="store.storeName">
+                                    {{store.storeName}} ({{store.storeCode}})
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+
+                </mat-accordion>
+              </mat-tab>
+              <mat-tab *ngIf="currentActiveTab == 1" label="Product">
+                <mat-accordion *ngFor=" let product of productDetailList">
+                  <mat-card>
+                    <mat-expansion-panel class="cover-header" formGroupName="productDetailPanel">
+                      <mat-expansion-panel-header [collapsedHeight]="'85px'" [expandedHeight]="'100px'">
+                        <!-- <mat-panel-title>
+                          <div>
+                            <b class="vertical-title">Monthly cover </b>
+                          </div>
+                          <div>
+                            <h3>{{product.description}}</h3>
+                          </div>
+                        </mat-panel-title> -->
+                        <mat-panel-title class="ver-title" [ngStyle]="{'background': partnerColorCode}">
+                          <div>
+                            <b
+                              style="writing-mode: vertical-rl;text-orientation: mixed;height: 60px;transform: rotate(-180deg);">Monthly
+                              cover
+                            </b>
+                          </div>
+                        </mat-panel-title>
+                        <mat-panel-title>
+                          <h3>{{product.description}}</h3>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                          <h3>{{product.clientProductDesciption}}</h3>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <mat-card>
+                          <mat-card-content>
+                            <table class="alignTable">
+                              <tr *ngFor=" let term of productDescriptionBullets">
+                                <td>
+                                  {{term}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="btn-contract">
+                                  <button mat-raised-button (click)='confirmContract(product);' [ngStyle]="{'color': partnerColorCode}">
+                                    Confirm Contract
+                                  </button>
+                                </td>
+                              </tr>
+                            </table>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+              </mat-tab>
+              <mat-tab *ngIf="currentActiveTab == 2" label="Device">
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel (afterExpand)="enableWebCam(true)">
+                      <mat-expansion-panel-header [collapsedHeight]="'100px'" [expandedHeight]="'100px'">
+                        <mat-panel-title>
+                          <b>Front Image - Take a picture with the device IMEI displaying on the screen. Dial *#06# to
+                            display the IMEI</b>
+                          <mat-error *ngIf="frontImageValidationFailed" class="mat-error-panel">
+                            <b>{{panelErrorMessage}}</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div #parentDiv style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td class="image-container">
+                              <webcam [width]="300" [trigger]="triggerObservable"
+                                (imageCapture)="handleImage($event)" *ngIf="imageCapturePanel && frontImageUrl == null"
+                                [imageQuality]="1" (initError)="handleInitError($event)">
+                              </webcam>
+                              <img
+                                *ngIf="frontImageUrl != null" style="height:300px;width:330px" [src]=frontImageUrl class="image-panel" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="image-container">
+                              <button *ngIf="frontImageUrl == null" mat-raised-button (click)="triggerSnapshot();" [ngStyle]="{'color': partnerColorCode}">Take
+                                A
+                                Snapshot</button>
+                              <button *ngIf="frontImageUrl != null" mat-raised-button [ngStyle]="{'color': partnerColorCode}"
+                                (click)="recaptureImage();">Recapture</button>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+                  <mat-card>
+                    <mat-expansion-panel (afterExpand)="enableWebCam(false)">
+                      <mat-expansion-panel-header [collapsedHeight]="'100px'" [expandedHeight]="'100px'">
+                        <mat-panel-title>
+                          <b>Take a picture of the back of the device WITHOUT casing or protection</b>
+                          <mat-error *ngIf="backImageValidationFailed" class="mat-error-panel">
+                            <b>{{panelErrorMessage}}</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td class="image-container">
+                              <webcam [width]="300" [trigger]="triggerObservable"
+                                (imageCapture)="handleImage($event)" *ngIf="!imageCapturePanel && backImageUrl == null"
+                                [imageQuality]="1" (initError)="handleInitError($event)"></webcam>
+                              <img
+                                *ngIf="backImageUrl != null" style="height:300px;width:330px" [src]=backImageUrl class="image-panel" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="image-container">
+                              <button *ngIf="backImageUrl== null" mat-raised-button [ngStyle]="{'color': partnerColorCode}" (click)="triggerSnapshot();">Take
+                                A
+                                Snapshot</button>
+                              <button *ngIf="backImageUrl != null" mat-raised-button [ngStyle]="{'color': partnerColorCode}"
+                                (click)="recaptureImage(true);">Recapture</button>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+              </mat-tab>
+              <mat-tab *ngIf="currentActiveTab == 3" label="Confirmation">
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="customerDetailPanel">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Customer Detail</b>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Name</mat-label>
+                                <input [readonly]="true" formControlName="customerName" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">ID Type</mat-label>
+                                <input [readonly]="true" formControlName="idType" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">ID No.</mat-label>
+                                <input [readonly]="true" formControlName="customerId" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Mobile No.</mat-label>
+                                <span matPrefix>60 &nbsp;</span>
+                                <input [readonly]="true" formControlName="custMobileNumber" matInput type="text"
+                                  [value]="partnerPolicy.custMobileNumber">
+                              </mat-form-field>
+                            </td>
+                          <tr>
+
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Email</mat-label>
+                                <input [readonly]="true" formControlName="customerEmail" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Address</mat-label>
+                                <input [readonly]="true" formControlName="custAddress" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Postal Code</mat-label>
+                                <input [readonly]="true" formControlName="postalCode" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">City</mat-label>
+                                <input [readonly]="true" formControlName="customerCity" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">State</mat-label>
+                                <input [readonly]="true" formControlName="customerState" matInput type="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Country</mat-label>
+                                <input [readonly]="true" formControlName="customerCountryCode" matInput ype="text"
+                                  [value]="partnerPolicy.custAddress.customerCountry">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+
+                  </mat-card>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="deviceDetailPanel">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Device Detail</b>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">IMEI</mat-label>
+                                <input [readonly]="true" formControlName="policyIMEINumber" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Serial No.</mat-label>
+                                <input [readonly]="true" formControlName="deviceSerialNo" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Make</mat-label>
+                                <input [readonly]="true" formControlName="deviceMake" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Model</mat-label>
+                                <input [readonly]="true" formControlName="deviceModel" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Capacity</mat-label>
+                                <input [readonly]="true" formControlName="deviceCapacity" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Color</mat-label>
+                                <input [readonly]="true" formControlName="deviceColor" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="staffDetailPanel">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Staff Detail</b>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Staff Name</mat-label>
+                                <input [readonly]="true" formControlName="staffName" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <mat-form-field>
+                                <mat-label class="label-policy">Store Name</mat-label>
+                                <input [readonly]="true" formControlName="storeName" matInput ype="text">
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel class="cover-header">
+                      <mat-expansion-panel-header [collapsedHeight]="'85px'" [expandedHeight]="'90px'">
+                        <mat-panel-title class="ver-title" [ngStyle]="{'background': partnerColorCode}">
+                          <b style="transform: rotate(-90deg);width: 60px;">{{partnerPolicy.selectedProdcutTenure}}</b>
+                        </mat-panel-title>
+                        <mat-panel-title>
+                          <h3>{{partnerPolicy.selectedProductDescription}}</h3>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div style="overflow-y:auto !important;">
+                        <mat-card>
+                          <table class="alignTable">
+                            <tr *ngFor=" let term of productDescriptionBullets">
+                              <td>
+                                {{term}}
+                              </td>
+                            </tr>
+                          </table>
+                        </mat-card>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Front Image</b>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <table class="alignTable">
+                        <tr>
+                          <td class="image-container">
+                            <img *ngIf="frontImageUrl != null" style="height:225px;width:300px" [src]=frontImageUrl class="image-panel" />
+                          </td>
+                        </tr>
+                      </table>
+                    </mat-expansion-panel>
+                  </mat-card>
+                  <mat-card>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <b>Back Image</b>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <table class="alignTable">
+                        <tr>
+                          <td class="image-container">
+                            <img *ngIf="backImageUrl != null" style="height:225px;width:300px" [src]=backImageUrl class="image-panel" />
+                          </td>
+                        </tr>
+                      </table>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="confirmationPanel">
+                      <mat-expansion-panel-header [expandedHeight]="'100px'" [collapsedHeight]="'100px'">
+                        <mat-panel-title>
+                          <b>Customer <br>
+                            Acknowledgement</b>
+                          <mat-error *ngIf="customerAcknowledgementValidationFailed" class="mat-error-panel">
+                            <b>Please <br>confirm</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+
+                      <mat-card>
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <div class="wrap-text align-left">
+                                <b class="success-text">
+                                  DECLARATION AND AUTHORIZATION<br>
+                                  <br>
+                                  <mat-checkbox color="primary" formControlName="customerAcknowledgement"
+                                    (click)="confirmAcknowledgement('CUSTOMER')" required="true">
+                                    I hereby declare and agree that:
+                                  </mat-checkbox>
+                                </b>
+                              </div>
+                              <br>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              a) All information provided by me in this application,
+                              or any formal questionnaire or other documents signed
+                              by me in conjunction with this application, and statements
+                              and answers so made to AmTrust Mobile Solutions Malaysia
+                              Sdn. Bhd. (“Company”) are full, complete, true, accurate
+                              and correct,and I understand and agree that the Company,
+                              believing them to be such, will rely and act on them,
+                              otherwise the protection granted by the Company may be
+                              void at the Company’s sole option.
+                              <br>
+                              <br>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              b) In compliance with the Personal Data Protection Act 2010
+                              and its regulations enacted thereunder, any personal
+                              information or data collected or held by the Company (whether
+                              contained in this application or otherwise obtained) is provided
+                              to the Company and consented that such data and personal
+                              information may be processed, held, stored, administered,
+                              used and disclosed by the Company to individuals, service
+                              providers and organizations associated with the Company or
+                              any other selected third parties (within or outside of Malaysia)
+                              for the purpose of processing this application and providing
+                              subsequent service for this application.I understand that I have
+                              the right to obtain access to and to request correction of any
+                              personal information held by the Company concerning me.
+                              Such requests can be made to any of the Company’s Customer
+                              Service Centres.
+                              <br>
+                              <br>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              c) By this registration, I hereby agree to AmTrust Mobile Solution’s
+                              Terms & Conditions and Privacy Notice.
+                            </td>
+                          </tr>
+                        </table>
+                      </mat-card>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+                <mat-accordion>
+                  <mat-card>
+                    <mat-expansion-panel formGroupName="confirmationPanel">
+                      <mat-expansion-panel-header [expandedHeight]="'100px'" [collapsedHeight]="'100px'">
+                        <mat-panel-title>
+                          <b>Declaration by The<br>
+                            Authorized Sales <br>Person</b>
+                          <mat-error *ngIf="staffAcknowledgementValidationFailed" class="mat-error-panel">
+                            <b>Please<br> confirm</b></mat-error>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+
+                      <mat-card>
+                        <table class="alignTable">
+                          <tr>
+                            <td>
+                              <div class="wrap-text align-left">
+                              <mat-checkbox color="primary" formControlName="staffAcknowledgement"
+                                (change)="confirmAcknowledgement('STAFF')">
+                                <b>I hereby declare that :</b>
+                                <br>
+                              </mat-checkbox>
+                              </div>
+                              <br>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              On the date of this customer registration,
+                              the device being covered is not more than 24 Months old,
+                              present at the time of registration, and is not loss nor stolen,
+                              and is free of any damage, liquid damage, and or mechanical failure.
+                            </td>
+                          </tr>
+                        </table>
+                      </mat-card>
+                    </mat-expansion-panel>
+                  </mat-card>
+                </mat-accordion>
+              </mat-tab>
+            </mat-tab-group>
+            <mat-card *ngIf="currentActiveTab == 4">
+              <mat-card-content>
+                <img src="assets/images/correct.png" class="check-img" />
+              </mat-card-content>
+              <mat-card-content>
+                <b class="success-text">
+                  <p>The request for device protection has been successfully submitted.</p>
+                  <p>Customer will be receiving notification once the registration and the 1st charging is successful.
+                  </p>
+                </b>
+              </mat-card-content>
+            </mat-card>
+            <div *ngIf="currentActiveTab < 3">
+              <button mat-raised-button style="width: 95%;margin-left: 2.5%;" [ngStyle]="{'color': partnerColorCode}" (click)="changeTab();"
+              *ngIf="currentActiveTab !=1">
+              Next
+            </button>
+            <button mat-raised-button style="width: 95%;margin-left: 2.5%;margin-top:2%;" [ngStyle]="{'color': partnerColorCode}" (click)="changeTab(true);">
+              Back
+            </button>
+            </div>
+            <div *ngIf="currentActiveTab == 3">
+              <button mat-raised-button style="width: 95%;margin-left: 2.5%;" [ngStyle]="{'color': partnerColorCode}" (click)="onboardPartnerPolicy();">
+                Confirm
+              </button>
+              <button mat-raised-button style="width: 95%;margin-left: 2.5%;margin-top:2%;"  [ngStyle]="{'color': partnerColorCode}" (click)="changeTab(true);">
+                Back
+              </button>
+            </div>
+            <div *ngIf="currentActiveTab == 4">
+              <button mat-raised-button style="width: 95%;margin-left: 2.5%;margin-top:2%;" [ngStyle]="{'color': partnerColorCode}" (click)="changeTab(true);">
+                Back to home
+              </button>
+            </div>
+          </mat-card>
+        </form>
+      </div>
+    </div>
+  </div>

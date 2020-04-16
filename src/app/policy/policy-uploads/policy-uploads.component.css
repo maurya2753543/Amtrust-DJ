@@ -1,0 +1,45 @@
+.section {
+    width: 600px;
+    margin-left: 300px;
+    margin-top: 50px;
+}
+
+.mat-card {
+    padding: 30px;
+    position: relative;
+    box-shadow: none;
+}
+
+.mat-card-title {
+    font-size: 50px;
+    color: #2EB5C7;
+}
+
+.mat-card-subtitle {
+    padding-left: 100px;
+}
+
+.mat-card-footer {
+    padding-left: 130px;
+}
+
+.mat-form-field {
+    display: block;
+}
+
+.batch-id {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.batch-message {
+    padding-left: 20px;
+}
+
+.errMsg {
+    font-size: 14px;
+    color: #ef7575;;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+}

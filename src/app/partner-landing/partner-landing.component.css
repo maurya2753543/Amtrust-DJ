@@ -1,0 +1,34 @@
+.center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width:150px;
+    height:212px;
+}
+
+.m-60{
+    margin-top: 60px;
+}
+.card-center{
+    width: 80%;
+    margin: auto;
+}
+.text-center{
+    text-align: center;
+}
+
+.block{
+    display: block;
+}
+
+.btn-block{
+    margin: 20px auto;
+    display: block;
+    width: 90%;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.divider-color{
+    background-color: #8461c0;
+}

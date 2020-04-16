@@ -1,0 +1,115 @@
+<mat-tab-group *ngIf="showTabs" [(selectedIndex)]="crmzSelectedTab">
+  <mat-tab *ngIf="!showPartnersTab" label="Home">
+    <ng-template mat-tab-label>
+      <div [routerLink]="['home']">
+        <mat-icon class="tab-icon">home</mat-icon>
+        <b class="navMenuText">Home</b>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab *ngIf="showPartnersTab" label="DIGIBYOD">
+    <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+      <div fxFlex>
+        <app-partner-landing *ngIf="!showDigiApp"></app-partner-landing>
+        <app-partner-onboarding *ngIf="showDigiApp"></app-partner-onboarding>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab *ngIf="showPolicyTab" label="Policy">
+    <ng-template mat-tab-label>
+      <div (click)="resetRoute()">
+        <p class="navMenuText" [matMenuTriggerFor]="menu">
+          <mat-icon class="tab-icon">description</mat-icon>Policy
+        </p>
+      </div>
+    </ng-template>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item [routerLink]="['policy', 'upload']" class="navMenu" hideIfUnauthorized module="policy"
+        permission="Create">
+        Policy Bulk Upload
+      </a>
+      <a mat-menu-item [routerLink]="['policy', 'batch', 'history']" class="navMenu" hideIfUnauthorized module="policy"
+        permission="Read">
+        Policy Batches History
+      </a>
+      <!--a mat-menu-item class="navMenu" [routerLink]="['policy']"
+              hideIfUnauthorized permission="Upload" module="policy">
+              <li>Create Policy</li>
+            </a-->
+      <a mat-menu-item [routerLink]="['policy','list']" class="navMenu" hideIfUnauthorized module="policy"
+        permission="Read">
+        Policy Search
+      </a>
+    </mat-menu>
+  </mat-tab>
+  <mat-tab *ngIf="showClaimTab" label="Claim">
+    <ng-template mat-tab-label>
+      <div (click)="resetRoute()">
+        <p class="navMenuText" [matMenuTriggerFor]="menu">
+          <mat-icon class="tab-icon">description</mat-icon>Claim
+        </p>
+      </div>
+    </ng-template>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item [routerLink]="['claim', 'search']" class='navMenu' hideIfUnauthorized module="claim"
+        permission="Create">
+        Create Claim
+      </a>
+      <a mat-menu-item [routerLink]="['claim', 'pending']" class='navMenu' hideIfUnauthorized module="claim"
+        permission="Read">
+        Claim Search
+      </a>
+    </mat-menu>
+  </mat-tab>
+
+  <mat-tab *ngIf="showProductTab" label="Product">
+    <ng-template mat-tab-label>
+      <div (click)="resetRoute()">
+        <p class="navMenuText" [matMenuTriggerFor]="menu">
+          <mat-icon class="tab-icon">description</mat-icon>Product
+        </p>
+      </div>
+    </ng-template>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item [routerLink]="['productsearch']" class="navMenu" hideIfUnauthorized module="product"
+        permission="Read">
+        Product Search
+      </a>
+    </mat-menu>
+  </mat-tab>
+  <mat-tab *ngIf="!showPartnersTab" label="Audit">
+    <ng-template mat-tab-label>
+      <div (click)="resetRoute()">
+        <p class="navMenuText" [matMenuTriggerFor]="menu">
+          <mat-icon class="tab-icon">description</mat-icon>Audit
+        </p>
+      </div>
+    </ng-template>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item [routerLink]="['audit']" class="navMenu">
+        Audit Trail
+      </a>
+    </mat-menu>
+  </mat-tab>
+
+  <mat-tab disabled>
+    <ng-template mat-tab-label>
+      <span style="margin-left: 300px !important;">
+        <span *ngIf="!showPartnersTab">
+          <mat-icon style="margin-right: 17px !important;" (click)="openNotifications()" [matBadge]="badgeCounter"
+            matBadgeColor="warn">
+            notification_important</mat-icon>
+        </span>
+        <span>{{userName}}</span>
+        <button (click)="logout()" mat-button>
+          Logout<mat-icon class="tab-icon">input</mat-icon>
+        </button>
+      </span>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+<router-outlet *ngIf="showTabs"></router-outlet>
+<router-outlet *ngIf="!showTabs" name="loginRouter"></router-outlet>
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

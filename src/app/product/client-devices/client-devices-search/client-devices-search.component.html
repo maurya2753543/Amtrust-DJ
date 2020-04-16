@@ -1,0 +1,75 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<div>
+  <div style="width: 879px; border:qpx soild #0000">
+    <h1 class="heading">
+      Client Devices Listing Page
+    </h1>
+  </div>
+  <div>
+    <button (click)="displayCriteria()" class="div-padding-button" mat-button
+      style="margin-top: 10px !important;">Filter
+      Criteria
+    </button>
+  </div>
+  <br>
+  <div gdAreas="header | content" gdGap="16px" gdRows="auto auto">
+    <div *ngIf="showFilter && params">
+      <div gdArea="header">
+        <mat-card class="example-card" style="background:#f6f6f6;">
+          <mat-form-field style="width: 450px;">
+            <mat-label>Client Name</mat-label>
+            <mat-select [(value)]="productSearchCriteria.clientCode">
+              <mat-option *ngFor="let client of clientDetails" value={{client.partnerId}}>{{client.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button (click)="getProductList()" class="div-padding-button" mat-button style="margin-left:0px !important"
+            type="search">
+            Search
+          </button>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+  <br><br><br>
+
+  <div *ngIf="books.length>0" gdArea="content" style="display: block !important;">
+    <mat-grid-list *ngIf="books" [style.background-color]="'#E5E3E3'" cols="6" rowHeight="4:1">
+      <mat-grid-tile><b>Make Name</b></mat-grid-tile>
+      <mat-grid-tile><b>Model</b></mat-grid-tile>
+      <mat-grid-tile><b>SKU Code</b></mat-grid-tile>
+      <mat-grid-tile><b>Device Retail Price</b></mat-grid-tile>
+    </mat-grid-list>
+    <div *ngIf="responseReceived">
+      <img (load)="loader()" [hidden]="true" src="assets/images/file.png" />
+    </div>
+    <div *ngIf="books">
+      <div *ngFor="let book of books" class="div-tile">
+        <mat-grid-list class="grid-column" cols="6" gutterSize="1px" rowHeight="3:1">
+          <a [routerLink]="['details']" [state]="[book,productSearchCriteria]" class="navMenu" hideIfUnauthorized
+            id="anchor-clr" permission="Read">
+            <mat-grid-tile class="mgt">{{book.name}}</mat-grid-tile>
+            <mat-grid-tile class="mgt">{{book.client.countryName}}</mat-grid-tile>
+            <mat-grid-tile class="mgt">
+              <span *ngIf="book.insurerCode; else notAvailable">{{book.insurerName}}</span>
+              <ng-template #notAvailable>Not available</ng-template>
+            </mat-grid-tile>
+            <mat-grid-tile class="mgt">{{book.client.name}}</mat-grid-tile>
+            <mat-grid-tile class="mgt">
+              <span class="pro-stat-btn">{{book.productStatus}}</span>
+            </mat-grid-tile>
+            <mat-grid-tile class="mgt">
+              {{book.coverageDesc}}
+            </mat-grid-tile>
+          </a>
+        </mat-grid-list>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br><br><br>

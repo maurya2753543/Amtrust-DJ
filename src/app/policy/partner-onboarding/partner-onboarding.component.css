@@ -1,0 +1,128 @@
+.logo-container{
+    display: flex !important;
+    justify-content: center;
+}
+
+.img-container{
+    width: 150px;
+    height:212px;
+    margin-top:5%;
+}
+
+.mat-option{
+    line-height: normal !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: auto !important;
+    white-space: normal;
+}
+
+.mat-option-text{
+    text-overflow: inherit;
+    overflow: initial;
+}
+
+.heading-container{
+    color: black;
+    display: flex;
+    justify-content: center;
+}
+
+.mat-expansion-panel-header-title{
+    margin-right: 3px !important;
+}
+
+.check-img{
+    width: 75px;
+    height: 75px;
+    margin: auto;
+    display: block;
+}
+
+.success-text{
+    display: block;
+    text-align: center;
+}
+.submit-panel{
+    margin-top:2%;
+}
+.label-policy {
+    width: 200px !important;
+}
+
+.label-policy-same-line {
+    width: 200px !important;
+    margin-left: 10%;
+}
+.ver-title{
+    position: absolute;
+    width: 34px;
+    height: 65px;
+    padding: 10px;
+    left: 16px;
+    z-index: 99;
+    top: 16px;
+}
+
+.cover-header .mat-expansion-panel-header {
+    padding-left: 64px !important;
+}
+
+.image-panel{
+    width:500px;
+    height:375px;
+}
+/* .image-container{
+    padding-left:30%;
+} */
+.mat-button, .mat-raised-button{
+    background-color:black;
+}
+.mat-grid-list {
+    width: 100%;
+}
+.mat-accordion .mat-expansion-panel:last-of-type {
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.mat-accordion .mat-expansion-panel:first-of-type {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.mat-error-panel {
+    margin-left: 10px !important;
+}
+.responseive-table{
+    overflow-x:auto !important;
+}
+
+.vertical-title{
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    height: 60px;
+    transform: rotate(-180deg);
+}
+
+.btn-contract{
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+}
+.wrap-text{
+    font-size:12px;
+    word-break:break-all;
+}
+.align-left{
+    float: left;
+}
+.alignTable{
+    width: -webkit-fill-available;
+}
+.mat-form-field {
+    display: block !important;
+    position: relative;
+    text-align: left;
+}
+::ng-deep .mat-select-panel {
+    max-height: 23vh !important;
+}

@@ -1,0 +1,66 @@
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+  <section class="login">
+    <mat-card style="display: contents !important;">
+      <div class="logo"></div>
+      <div class="login-content">
+        <mat-card-header class="card-title">
+          <mat-card-title class="align-center">Welcome!</mat-card-title>
+          <mat-card-subtitle class="align-center">
+            Sign in to continue to CRM-Zero {{appVersion}}.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <form (ngSubmit)="login()" [formGroup]="loginForm">
+          <mat-card-content>
+            <div *ngIf="responseAvailable || responseFailed">
+              <div *ngIf="responseMessage.status=='SUCCESS'" class="alert alert-success text-xs-center">
+                {{responseMessage.message}}
+              </div>
+              <div *ngIf="responseMessage.status=='FAILED'" class="alert alert-danger text-xs-center">
+                <mat-error>{{responseMessage.message}}</mat-error>
+              </div>
+              <div *ngIf="responseFailed" class="alert alert-danger text-xs-center">
+                <mat-error style="margin-bottom: 5px;"><b>CRMZ-Identity Backend Api Disconnected!</b>
+                </mat-error>
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="30px">
+              <div fxFlex>
+                <mat-form-field>
+                  <mat-label>
+                    <mat-icon>person</mat-icon>
+                    User Name
+                  </mat-label>
+                  <input (input)="auth.userName=$event.target.value" [value]="auth.userName" formControlName="userName"
+                    matInput name="username" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="30px">
+              <div fxFlex>
+                <mat-form-field>
+                  <mat-label>
+                    <mat-icon>lock</mat-icon>
+                    Password
+                  </mat-label>
+                  <input (input)="auth.password=$event.target.value" [type]="hide ? 'password' : 'text'"
+                    [value]="auth.password" formControlName="password" matInput name="password" />
+                  <mat-icon (click)="hide = !hide" class="show-password" matSuffix>{{hide ?
+                      'visibility_off' : 'visibility'}}
+                  </mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button [disabled]='!loginForm.valid' color="accent" mat-raised-button type="submit">Login
+            </button>
+          </mat-card-actions>
+        </form>
+
+        <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" size="large" type="ball-fussion">
+          <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+      </div>
+    </mat-card>
+  </section>
+</div>

@@ -1,0 +1,10 @@
+.div-tile {
+    padding-top: 2px !important;
+}
+
+.div-padding-button {
+    margin: 10px;
+    color: white;
+    background-color: #2EB5C7;
+    float: right;
+}

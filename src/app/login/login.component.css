@@ -1,0 +1,77 @@
+.login{
+    margin: auto;
+    width: 50%;
+}
+@media only screen and (max-width: 600px){
+    .login{
+        width: 80% !important;
+    }
+}
+
+.align-center{
+    text-align: center;
+}
+
+.card-title{
+    display: flex;
+    justify-content: center;
+}
+
+.mat-card {
+    padding: 30px;
+    position: relative;
+}
+
+.mat-card-header {
+    margin-bottom: 10px;
+}
+
+.mat-card-title {
+    font-size: 24px;
+}
+
+.mat-card-content {
+    margin-bottom: 0;
+}
+
+.mat-card-actions {
+    margin: 0;
+    text-align: center;
+}
+
+.mat-raised-button {
+    display: block;
+    width: 100%;
+}
+
+.mat-form-field {
+    display: block;
+}
+
+.show-password {
+    font-size: 120%;
+}
+
+.mat-icon {
+    vertical-align: top !important;
+}
+
+.mat-button {
+    color: #fff;
+    font-size: 12px;
+}
+
+.login-content {
+    padding: inherit;
+}
+
+.logo {
+    margin-top: 70px !important;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    height: 100px;
+    background-image: url('../../assets/images/BOLTTECH_POSITIVE_CYAN_RGB.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+}

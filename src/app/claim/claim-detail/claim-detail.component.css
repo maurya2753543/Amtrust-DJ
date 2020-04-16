@@ -1,0 +1,307 @@
+.text-css {
+    display: inline-block;
+}
+
+.label-claim {
+    width: 200px !important;
+}
+
+.mat-card {
+    /*background-color:aquamarine;*/
+    width: unset;
+    /* text-align: center; */
+}
+
+.mat-form-field {
+    width: 180px;
+    margin-left: 20px !important;
+    font-size: bold;
+}
+
+.div-gap {
+    top: 20px;
+}
+
+.td-align {
+    vertical-align: top;
+}
+
+.card-container {
+    /*  not needed styles to reflect it */
+    background: rgb(243, 243, 245);
+    padding: 10px;
+    color: rgb(77, 75, 75);
+    /* needed styles below */
+    display: flex;
+    /*justify-content: space-between;*/
+    width: 400px;
+}
+
+.card-width {
+    background: rgb(243, 243, 245);
+    padding: 10px;
+    color: white;
+    /* needed styles below */
+    display: flex;
+    justify-content: space-between;
+    width: 800px;
+}
+
+.card-agent {
+    background: rgb(243, 243, 245);
+    padding: 10px;
+    /* needed styles below */
+    display: flex;
+    /*justify-content: space-between;*/
+    width: 800px;
+}
+
+.card-incident {
+    background: rgb(243, 243, 245);
+    padding: 10px;
+    /*color: white;*/
+    /* needed styles below */
+    display: flex;
+    width: 800px;
+}
+
+.div-tile {
+    padding-bottom: 10px !important;
+
+}
+
+.mat-card-content {
+    text-align: left;
+}
+
+.card-address {
+    background: rgb(243, 243, 245);
+    padding: 20px;
+    color: black;
+    /* needed styles below */
+    display: flex;
+    width: 800px;
+}
+
+.image-wrapper li {
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    float: left;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    cursor: default;
+    background: #fff;
+    margin-bottom: 25px;
+}
+
+.browse-btn {
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 0.5rem;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.browse-image {
+    position: relative;
+    top: 25%;
+}
+
+.claim-image {
+    width: 100%;
+    height: 125px;
+}
+
+a.delete-btn {
+    color: #f00;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#cameraImg {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+}
+
+.error {
+    color: #ff0000;
+}
+
+
+.claim-doc {
+    width: 100%;
+    height: 125px;
+}
+
+a.delete-btn {
+    color: #f00;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.active {
+    color: green;
+}
+
+/* image modal */
+#myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myImg:hover {
+    opacity: 0.7;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {
+        -webkit-transform: scale(0)
+    }
+    to {
+        -webkit-transform: scale(1)
+    }
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0.1)
+    }
+    to {
+        transform: scale(1)
+    }
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.backButton {
+    position: absolute;
+    right: 0px;
+    color: white;
+    background-color: #2EB5C7;
+    margin: 10px;
+}
+
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px) {
+    .modal-content {
+        width: 100%;
+    }
+}
+
+.mat-error-panel {
+    margin-left: 10px !important;
+}
+
+
+.logisticsLocation {
+    padding-right: 25px;
+}
+
+
+.logisticsDetails {
+    vertical-align: top;
+    padding-top: 26px;
+}
+
+.courierHeading {
+    display: inline-block;
+    margin-top: 15px
+}
+
+.requiresCheckbox:first-child {
+    margin-top: 6px;
+}
+
+.requiresCheckbox {
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.requiresCheckbox:last-child {
+    margin-bottom: 6px;
+}
+
+.tp-full-width {
+    width: 150%;
+ }
+
+ .tp-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+ }

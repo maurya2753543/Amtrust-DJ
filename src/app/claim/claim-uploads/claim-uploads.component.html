@@ -1,0 +1,27 @@
+<h1 class="heading">
+  AMS Claim Upload
+</h1>
+<div class="div-padding">
+  <div>
+    <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
+      <div>
+        <input (change)="onSelectedFile($event)" class="div-padding-button" formControlName="fileUploaded"
+               type="file"/>
+      </div>
+      <div>
+        <button class="div-padding-button" type="submit">Upload</button>
+      </div>
+      <div *ngIf="fileUpload.status==='complete';else erroMessage">
+        <div class="fileUploadCss">
+          <div>{{fileUpload.message}} for BatchId:{{fileUpload.id}}
+          </div>
+        </div>
+      </div>
+      <ng-template #erroMessage>
+        <div [class.fileUploadCss]="fileUpload.status==='Failed'">
+          {{fileUpload.message}}
+        </div>
+      </ng-template>
+    </form>
+  </div>
+</div>

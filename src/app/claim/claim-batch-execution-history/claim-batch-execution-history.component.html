@@ -1,0 +1,36 @@
+<h1 class="heading" style="margin-left: 300px !important;">
+  AMS Claim Batch Execution History
+</h1>
+<div class="div-padding">
+  <div>
+    <form>
+      <div id="table-wrapper">
+        <div *ngIf="batchExecutionHistory.status==='Success';else batchMessage" id="table-scroll">
+          <table>
+            <tr>
+              <th style="width: 100px;">Batch Id</th>
+              <th>Total Records Uploaded</th>
+              <th>Total Records Success</th>
+              <th>Total Records Failure</th>
+              <th style="width: 100px;">Batch Upload Date</th>
+              <th>Job Status</th>
+            </tr>
+            <tr *ngFor="let batch of batchExecutionHistory.obj">
+              <td>{{batch.batchId}}</td>
+              <td>{{batch.totalRecordsUploaded}}</td>
+              <td>{{batch.totalValidationSuccess}}</td>
+              <td>{{batch.totalValidationFailure}}</td>
+              <td>{{batch.batchUploadDate}}</td>
+              <td>{{batch.jobStatus}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <ng-template #batchMessage>
+        <div [class.fileUploadCss]="batchExecutionHistory.status==='Failed'">
+          {{batchExecutionHistory.message}}
+        </div>
+      </ng-template>
+    </form>
+  </div>
+</div>

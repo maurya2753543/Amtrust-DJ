@@ -1,0 +1,20 @@
+.text-css {
+    display: inline-block;
+}
+
+.label-policy {
+    color: black;
+    width: 200px !important;
+}
+
+.mat-card {
+    background-color: aquamarine;
+    width: unset;
+    text-align: center;
+}
+
+.mat-form-field {
+    width: 200px;
+    margin-left: 100px !important;
+}
+

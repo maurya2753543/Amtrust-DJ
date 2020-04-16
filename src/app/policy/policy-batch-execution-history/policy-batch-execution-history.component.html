@@ -1,0 +1,159 @@
+<div>
+  <h1 class="heading">
+    AMS Policy Batch Execution History
+  </h1>
+</div>
+<div class="execution-history">
+  <mat-form-field style="width:240px">
+    <mat-label>Client Name</mat-label>
+    <mat-select (selectionChange)="selectClientName($event)" placeholder="Select client name" [(value)]="clientId">
+      <mat-option value="">Select client name</mat-option>
+      <mat-option value={{clientName.partnerId}} *ngFor="let clientName of clientNames">
+        {{clientName.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div style="float:right;"
+  *ngIf="batchExecutionHistory && batchExecutionHistory.status && batchExecutionHistory.status==='OK'">
+  <mat-label>Items Per Page:</mat-label>
+  <mat-form-field>
+    <mat-select
+      (selectionChange)="appService.paginateSearch($event , itemsPerPage , batchExecutionHistorySearchObject , this.findBatchExecutionHistory.bind(this) , this , true)"
+      [(value)]="itemsPerPage">
+      <mat-option [value]="5">5</mat-option>
+      <mat-option [value]="10">10</mat-option>
+      <mat-option [value]="20">20</mat-option>
+      <mat-option [value]="50">50</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<br><br><br>
+<mat-grid-list (window:resize)="onResize($event)"
+  *ngIf="batchExecutionHistory && batchExecutionHistory.status && batchExecutionHistory.status==='OK'"
+  [cols]="breakpoint" [style.background]="'#E5E3E3'" rowHeight="4:1">
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          Batch-Id
+        </p>
+      </div>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          Total
+        </p>
+      </div>
+      <div class="col-sm-12">
+        <b>
+          Records Uploaded
+        </b>
+      </div>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          Total
+        </p>
+      </div>
+      <div class="col-sm-12">
+        <b>
+          Records Success
+        </b>
+      </div>
+    </div>
+  </mat-grid-tile>
+
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          Total
+        </p>
+      </div>
+      <div class="col-sm-12">
+        <b>
+          Records Failure
+        </b>
+      </div>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          Batch Upload Date
+        </p>
+      </div>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          Country
+        </p>
+      </div>
+    </div>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <div class="row">
+      <div class="col-sm-12">
+        <p style="text-align:center ; font-weight: bold;">
+          JobStatus
+        </p>
+      </div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<div *ngIf="batchExecutionHistory && batchExecutionHistory.obj">
+  <div class="div-tile"
+    *ngFor="let batch of batchExecutionHistory.obj.resultList | paginate: { id:policy_batch_exec_pagination_control ,itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: batchExecutionHistory.obj.totalRecordCount}">
+    <mat-grid-list [cols]="breakpoint" rowHeight="3:1" (window:resize)="onResize($event)">
+      <mat-grid-tile>{{batch.batchId}}</mat-grid-tile>
+      <mat-grid-tile>{{batch.totalRecordsUploaded}}</mat-grid-tile>
+      <mat-grid-tile>{{batch.totalValidationSuccess}}</mat-grid-tile>
+      <mat-grid-tile>{{batch.totalValidationFailure}}</mat-grid-tile>
+      <mat-grid-tile>{{batch.batchUploadDate}}</mat-grid-tile>
+      <mat-grid-tile>{{batch.country}}</mat-grid-tile>
+      <mat-grid-tile>
+        <div class="row">
+          <div class="row">
+            <div class="col=sm-4" [style.marginLeft]="batch.totalValidationFailure > 0 ? '25%' : '0%'">
+              {{batch.jobStatus}}
+            </div>
+          </div>
+          <div class="row" *ngIf="batch.totalValidationFailure > 0" style="margin-top:2%;">
+            <button (click)="downloadCSV(batch.batchId)" class="link-button">Download Error
+              Logs</button>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  <div>
+    <mat-grid-list cols="1" rowHeight="70px">
+      <mat-grid-tile>
+        <pagination-controls id="{{policy_batch_exec_pagination_control}}"
+          (pageChange)="appService.paginateSearch($event , itemsPerPage , batchExecutionHistorySearchObject , this.findBatchExecutionHistory.bind(this) , this)"
+          maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous" nextLabel="Next"
+          screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+          screenReaderCurrentLabel="You're on page">
+        </pagination-controls>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  <div *ngIf="batchExecutionHistory && batchExecutionHistory.status && batchExecutionHistory.status==='ERROR'">
+    <mat-error *ngFor="let msg of batchExecutionHistory.message"><b>
+        <li *ngIf="msg">{{msg}}</li>
+      </b></mat-error>
+  </div>
+</div>

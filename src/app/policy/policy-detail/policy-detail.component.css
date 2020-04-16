@@ -1,0 +1,44 @@
+.backButton {
+    position: absolute;
+    right: 0px;
+    color: white;
+    background-color: #2EB5C7;
+    margin: 10px;
+}
+
+.table-css {
+    width: fit-content !important;
+    text-align: center;
+}
+
+.chip {
+    color: white;
+    background-color: #2EB5C7;
+}
+
+.div-tile {
+    word-break: break-word;
+}
+
+.label-policy {
+    width: 200px !important;
+}
+
+.label-policy-same-line {
+    width: 200px !important;
+    margin-left: 10%;
+}
+
+.mat-form-field {
+    font-size: 16px;
+}
+
+.tp-full-width {
+    width: 40%;
+ }
+
+ .tp-form {
+    min-width: 100px;
+    max-width: 100px;
+    width: 50%;
+ }

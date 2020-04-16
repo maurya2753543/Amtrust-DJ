@@ -1,0 +1,16 @@
+<div class="col right m9 offset-m5" id="main">
+  <table *ngIf="product" class="striped responsive">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ product.name }}</td>
+      <td>{{ product.productCode }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

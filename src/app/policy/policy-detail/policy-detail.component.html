@@ -1,0 +1,362 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+<div
+  *ngIf="policyModel && policyModel.policyStatus && (policyModel.deviceFrontImage == null  && policyModel.deviceBackImage == null)">
+  <div>
+    <span>
+      <h1 class="heading">
+        <div style="display: flex !important;">
+          <span>{{policyModel.policyNumber}}&nbsp;</span>
+          <span>
+            <mat-chip-list>
+              <mat-chip class="chip">{{policyModel.policyStatus}}</mat-chip>
+            </mat-chip-list>
+          </span>
+        </div>
+      </h1>
+    </span>
+    <span class="backButton"><button (click)="back()" mat-button>Back</button></span>
+  </div>
+  <form [formGroup]="policyDetailsForm">
+    <mat-card style="background-color:#EFECEC">
+      <div hideIfUnauthorized module="policy" permission="Update">
+        <div [hidden]="editPolicyBtn">
+
+          <button (callback)="editPolicy()" action="ACTION_ACQUIRE" appConcurrentEditControl color="orange"
+            mat-raised-button sourceIdentifiersString="{{policyModel.policyNumber }}" sourceName="SOURCE_POLICY"
+            style="margin-left:0px !important" type="button">Edit
+          </button>&nbsp;
+        </div>
+        <div [hidden]="!editPolicyBtn">
+          <button action="ACTION_SAVE" (click)="updatePolicyDetails(policyDetailsForm.value)" appConcurrentEditControl
+            color="green" isTarget="true" mat-raised-button sourceIdentifiersString="{{policyModel.policyNumber }}"
+            sourceName="SOURCE_POLICY" style="margin-left:0px !important" type="button">Save
+          </button>&nbsp;
+          <button (callback)="cancelEdit()" action="ACTION_RELEASE" appConcurrentEditControl color="warn"
+            isTarget="true" mat-raised-button sourceIdentifiersString="{{policyModel.policyNumber }}"
+            sourceName="SOURCE_POLICY" style="margin-left:0px !important" type="button">Cancel
+          </button>
+        </div>
+        <br>
+        <div *ngIf="policyModel && policyModel.status && policyModel.status==='Success'">
+          <mat-card style="background-color: rgb(5, 252, 5)">
+            <mat-card-title></mat-card-title>
+          </mat-card>
+        </div>
+        <br>
+      </div>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>General</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+              <mat-label class="label-policy"><strong>Name:</strong></mat-label>
+              <mat-form-field>
+                <input (input)="policyModel.customerName=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel.customerName ?policyModel.customerName : '' " formControlName="customerName"
+                  matInput>
+              </mat-form-field>
+              <mat-label class="label-policy-same-line"><strong>LastName:</strong></mat-label>
+              <mat-form-field>
+                <input (input)="policyModel.customerLastName=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel?.customerLastName ? policyModel.customerLastName: ''"
+                  formControlName="customerLastName" matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label class="label-policy"><strong>Identification No:</strong></mat-label>
+              {{ policyModel.custIdNumber }}
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label class="label-policy"><strong>Email:</strong></mat-label>
+              <mat-form-field>
+                <input (input)="policyModel.customerEmail=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel.customerEmail ? policyModel.customerEmail : ''" formControlName="customerEmail"
+                  matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label class="label-policy"><strong>Phone Number:</strong></mat-label>
+              <mat-form-field>
+                <input (input)="policyModel.custMobileNumber=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel.custMobileNumber ? policyModel.custMobileNumber: ''"
+                  formControlName="custMobileNumber" matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label class="label-policy"><strong>E-cert URL:</strong></mat-label>
+              <a *ngIf="(policyModel.ecertUrl != null || policyModel.ecertUrl != undefined) && (policyModel.ecertUrl != '') ; else labelBlock"
+                href="{{policyModel.ecertUrl}}" target="blank">{{policyModel.ecertUrl}}</a>
+              <ng-template #labelBlock>eCert is currently being generated. Please check again later.</ng-template>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+        <div class="spacer"></div>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Address</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+              <mat-form-field style="width: 67%;" appearance="outline">
+                <input (keyup)="autoCompleteSearch($event)" matInput placeholder="Search Address"
+                  [matAutocomplete]="auto" [readonly]="!editPolicyBtn">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor=" let item of searchList" matTooltip="{{item.description}}"
+                  matTooltipClass="autocomplete-tooltip" (onSelectionChange)="setAddress(item.placeId,item.country)">
+                  {{item.description}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label><strong>Address1:</strong></mat-label>
+              <mat-form-field style="width: 60%;">
+                <input (input)="policyModel?.custAddress.address1=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel?.custAddress.address1 ?policyModel.custAddress.address1 : '' "
+                  formControlName="customerAddress1" matInput>
+              </mat-form-field>
+
+            </mat-list-item>
+
+            <mat-list-item>
+              <mat-label><strong>Address2:</strong></mat-label>
+              <mat-form-field style="width: 60%;">
+                <input (input)="policyModel?.custAddress.address2=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel?.custAddress.address2 ? policyModel?.custAddress.address2: ''"
+                  formControlName="customerAddress2" matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label><strong>Postal Code:</strong></mat-label>
+              <mat-form-field>
+                <input (input)="policyModel?.custAddress.postalCode=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel?.custAddress.postalCode ? policyModel?.custAddress.postalCode : ''"
+                  formControlName="cutomerPostalCode" matInput>
+              </mat-form-field>
+              <mat-label><strong>State :</strong></mat-label>
+              <mat-form-field style="width: 35%;">
+                <input (input)="policyModel?.custAddress.state=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel?.custAddress.state ? policyModel?.custAddress.state: ''"
+                  formControlName="customerState" matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label><strong>City :</strong></mat-label>
+              <mat-form-field style="width: 60%;">
+                <input (input)="policyModel?.custAddress.city=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel?.custAddress.city ? policyModel?.custAddress.city: ''"
+                  formControlName="customerCity" matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-label><strong>
+                  Country :</strong></mat-label>
+              <mat-form-field style="width: 60%;">
+                <mat-select (selectionChange)="policyModel?.custAddress.countryCode=$event.target.value"
+                  formControlName="customerCountryCode" [disabled]="!editPolicyBtn">
+
+                  <mat-option *ngFor="let country of countries" [value]="country.twoCharCode">{{country.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+        <div class="spacer"></div>
+        <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Device</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item>
+              <mat-label class="label-policy"><strong>IMEI No: </strong></mat-label>
+              <mat-form-field>
+                <input (input)="policyModel.policyIMEINumber=$event.target.value" [readonly]="!editPolicyBtn"
+                  [value]="policyModel.policyIMEINumber ? policyModel.policyIMEINumber :''"
+                  formControlName="policyIMEINumber" matInput>
+              </mat-form-field>
+            </mat-list-item>
+            <mat-list-item><strong>Type: </strong>{{ policyModel?.deviceType }}</mat-list-item>
+            <mat-list-item><strong>RRP: </strong>{{ policyModel?.deviceRRP }}</mat-list-item>
+            <mat-list-item><strong>Make: </strong>{{ policyModel?.deviceMake }}</mat-list-item>
+            <mat-list-item><strong>Model: </strong>
+              <span
+                *ngIf="policyModel.deviceModelDescription;else deviceModel">{{ policyModel?.deviceModelDescription }}</span>
+              <ng-template #deviceModel>
+                {{ policyModel?.deviceModel }}
+              </ng-template>
+            </mat-list-item>
+            <mat-list-item><strong>Color: </strong>{{ policyModel?.deviceColor }}</mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+        <div class="spacer"></div>
+        <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Subscription</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item><strong>Product Name: </strong> {{ productsData?.name }} </mat-list-item>
+            <mat-list-item><strong>Coverage: </strong>
+              <span>{{ policyModel?.coverage }}&nbsp;</span>
+            </mat-list-item>
+            <mat-list-item><strong>Type: </strong>{{productsData?.subscriptionType}}</mat-list-item>
+            <mat-list-item><strong>Client Transaction No: </strong>{{ policyModel?.clientTransactionNo }}
+            </mat-list-item>
+            <mat-list-item><strong>Contract Purchase Date: </strong>{{ policyModel?.policyPurchaseDate }}
+            </mat-list-item>
+            <mat-list-item><strong>Policy Start Date: </strong>{{ policyModel?.policyStartDate }}</mat-list-item>
+            <mat-list-item><strong>Policy End Date: </strong>{{ policyModel?.policyEndDate }}</mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+        <div class="spacer"></div>
+        <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Store</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list>
+            <mat-list-item><strong>Store Code: </strong> {{ policyModel?.storeCode }} </mat-list-item>
+            <mat-list-item><strong>Store Name: </strong>{{ policyModel?.storeName }}</mat-list-item>
+            <mat-list-item><strong>Store City: </strong>{{ policyModel?.storeCity }}</mat-list-item>
+            <mat-list-item><strong>Sales Representative Name: </strong>{{ policyModel?.salesRepName }}</mat-list-item>
+            <mat-list-item><strong>Sales Representative Id: </strong>{{ policyModel?.salesRepId }}</mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+        <div class="spacer"></div>
+        <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Pricing and Margins</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div style="padding-top: 5px !important;">
+            <mat-grid-list *ngIf="productsData && plans" [style.background]="'#E5E3E3'" cols="9" rowHeight="3:1">
+              <mat-grid-tile><b>Plan</b></mat-grid-tile>
+              <mat-grid-tile><b>Band</b></mat-grid-tile>
+              <mat-grid-tile><b>Insurer Cost</b></mat-grid-tile>
+              <mat-grid-tile><b>Transfer Price</b></mat-grid-tile>
+              <mat-grid-tile><b>Client Retail Price</b></mat-grid-tile>
+              <mat-grid-tile><b>Tax(%)</b></mat-grid-tile>
+              <mat-grid-tile><b>Client Retail Price (With Tax)</b></mat-grid-tile>
+              <mat-grid-tile><b>Excess Fee</b></mat-grid-tile>
+              <mat-grid-tile><b>Total</b></mat-grid-tile>
+            </mat-grid-list>
+          </div>
+          <div *ngIf="plans" class="div-tile">
+            <div *ngFor="let plan of plans">
+              <div *ngIf="plan">
+                <mat-grid-list cols="9" rowHeight="1:2">
+                  <mat-grid-tile>{{plan?.name}}</mat-grid-tile>
+                  <mat-grid-tile>{{plan?.bandNo}}</mat-grid-tile>
+                  <mat-grid-tile> {{plan?.claimRisk?.underwritingMarginValue}} </mat-grid-tile>
+                  <mat-grid-tile> {{plan?.price?.transferPriceValue}} </mat-grid-tile>
+                  <mat-grid-tile> {{plan?.price?.retailPriceValueWithoutTax}} </mat-grid-tile>
+                  <mat-grid-tile> {{plan?.price?.taxRateVat}} </mat-grid-tile>
+                  <mat-grid-tile> {{plan?.price?.retailPriceValueWithTax}}</mat-grid-tile>
+                  <mat-grid-tile>
+                    <div class="table-css">
+                      <table>
+                        <tr>
+                          <td>REPAIR</td>
+                        </tr>
+                        <tr>
+                          <td>{{plan?.excessFee?.repairValue}}</td>
+                        </tr>
+                        <br>
+                        <tr>
+                          <td>BER</td>
+                        </tr>
+                        <tr>
+                          <td>{{plan?.excessFee?.berValue}}</td>
+                        </tr>
+                        <br>
+                      </table>
+                    </div>
+                  </mat-grid-tile>
+                  <mat-grid-tile>
+                    <div class="table-css">
+                      <table>
+                        <tr>
+                          <td>REPAIR</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {{plan?.price?.retailPriceValueWithTax + plan?.excessFee?.repairValue   | number : '1.2-2'}}
+                          </td>
+                        </tr>
+                        <br>
+                        <tr>
+                          <td>BER</td>
+                        </tr>
+                        <tr>
+                          <td>{{plan?.price?.retailPriceValueWithTax + plan?.excessFee?.berValue   | number : '1.2-2'}}
+                          </td>
+                        </tr>
+                        <br>
+                      </table>
+                    </div>
+                  </mat-grid-tile>
+                  <mat-divider></mat-divider>
+                </mat-grid-list>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card>
+  </form>
+  <mat-card style="background-color:#EFECEC">
+    <app-activity-new activityType="POLICY" relatedId="{{policyModel?.policyNumber}}"></app-activity-new>
+  </mat-card>
+</div>
+<div *ngIf="(policyModel && (policyModel.deviceFrontImage != null  && policyModel.deviceBackImage != null))">
+  <div>
+    <span>
+      <h1 class="heading">
+        <div style="display: flex !important;">
+          <span>{{policyModel.policyIMEINumber}}&nbsp;</span>
+        </div>
+      </h1>
+    </span>
+    <span class="backButton"><button (click)="back()" mat-button>Back</button></span>
+  </div>
+  <mat-card>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Front Image</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card>
+          <img src="data:image/jpg;base64,{{policyModel.deviceFrontImage}}" />
+        </mat-card>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Back Image</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card>
+          <img src="data:image/jpg;base64,{{policyModel.deviceBackImage}}" />
+        </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+</div>

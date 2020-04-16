@@ -1,0 +1,21 @@
+.div-tile {
+    padding-top: 2px !important;
+}
+
+.mat-select {
+    text-align: center !important;
+}
+
+.link-button {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.execution-history{
+    width:350px !important;
+    margin-left: 20px;
+}

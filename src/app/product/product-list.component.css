@@ -1,0 +1,108 @@
+ul.unstyled-list {
+    text-align: left;
+}
+
+.full {
+    clear: both;
+    width: 100%;
+}
+
+.plans table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.plans table tr {
+    width: 100%;
+}
+
+.plans table th, .plans table td {
+    padding: 1em;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.plans table tr th {
+    background: #707070 !important;
+    color: #fff;
+    font-size: 13px;
+}
+
+h1 {
+    margin: 1em;
+}
+
+h3.div-table {
+    border-bottom: 5px solid #EFECEC;
+    padding-bottom: 1em;
+}
+
+.product-container {
+    background-color: #EFECEC;
+    margin: 1em;
+    padding: 1em;
+    max-width: 1000px;
+}
+
+.product-container-transparent {
+    margin: 1em;
+    padding: 1em;
+}
+
+.spacer {
+    height: 1em;
+}
+
+.leftCol {
+    float: left;
+    width: 35%;
+}
+
+.rightCol {
+    float: right;
+    width: 65%;
+}
+
+.full-row {
+    margin-bottom: 2em;
+    line-height: 2em;
+}
+
+.band-table .full-row-bordered {
+    border-bottom: 1px solid #EFECEC;
+    padding: 1.5em;
+    margin-bottom: 0;
+    line-height: 1em;
+    margin-top: 0em;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.product-page-container {
+    width: 1024px;
+
+}
+
+.border-line {
+    border-color: #ffff;
+}
+
+.backButton {
+    position: absolute;
+    right: 185px;
+    color: white;
+    background-color: #2EB5C7;
+    margin: 10px;
+    top: 37px;
+    border: 1px solid #2EB5C7;
+    border-radius: 4px;
+
+}
+
+#product-title {
+    position: relative;
+    right: 32px;;
+}

@@ -1,0 +1,1211 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+<div *ngIf="claim && claim?.status">
+  <img (load)="loader()" [hidden]="true" src="assets/images/file.png" />
+  <div>
+    <span>
+      <h1 class="heading">
+        <div style="display: flex !important;">
+          <span>{{claim?.claimNo}}&nbsp;</span>
+        </div>
+      </h1>
+    </span>
+    <span class="backButton"><button (click)="back()" mat-button>Back</button></span>
+  </div>
+
+  <form (ngSubmit)="updateClaim(claimForm.value)" [formGroup]="claimForm">
+    <br>
+    <div [hidden]="hideActionBtn">
+      <div [hidden]="editClaimBtn">
+        <button (callback)="editClaim()" action="ACTION_ACQUIRE" appConcurrentEditControl color="orange"
+          mat-raised-button sourceIdentifiersString="{{this.claim.policyNo}} {{this.claim.claimNo}}"
+          sourceName="SOURCE_CLAIM" style="margin-left:0px !important" type="button">Edit
+        </button>&nbsp;
+      </div>
+      <div [hidden]="!editClaimBtn">
+        <button action="ACTION_SAVE" appConcurrentEditControl color="green" isTarget="true" mat-raised-button
+          sourceIdentifiersString="{{this.claim.policyNo}} {{this.claim.claimNo}}" sourceName="SOURCE_CLAIM"
+          style="margin-left:0px !important" type="submit">Save
+        </button>&nbsp;
+        <button (callback)="cancelEdit()" action="ACTION_RELEASE" appConcurrentEditControl color="warn" isTarget="true"
+          mat-raised-button sourceIdentifiersString="{{this.claim.policyNo}} {{this.claim.claimNo}}"
+          sourceName="SOURCE_CLAIM" style="margin-left:0px !important" type="button">Cancel
+        </button>
+      </div>
+      <br>
+      <div *ngIf="response && response.status && response.status==='Success'">
+        <mat-card style="background-color: rgb(5, 252, 5)">
+          <mat-card-title></mat-card-title>
+        </mat-card>
+      </div>
+      <br>
+    </div>
+    <mat-accordion>
+      <mat-expansion-panel formGroupName="claimStatusPanel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Claim Status</b>
+            <mat-error *ngIf="claimStatusValidationFailed" class="mat-error-panel">
+              <b>{{panelErrorMessage}}</b></mat-error>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <tr>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Status</mat-label>
+                <mat-select (selectionChange)="onClaimStatusChange($event)" [(value)]="claim.statusCode"
+                  formControlName="statusCode" required>
+                  <mat-option *ngFor="let claimstatus of claimStatusToDisplay" [value]="claimstatus.code">
+                    {{claimstatus.name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error>Claim status cannot be empty</mat-error>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Sub Status</mat-label>
+                <mat-select (selectionChange)="onClaimSubStatusChange($event)" [(value)]="claim.subStatusCode"
+                  formControlName="subStatusCode" required>
+                  <mat-option *ngFor="let subStatus of claimSubStatus" [value]="subStatus.code">
+                    {{subStatus.name}}</mat-option>
+                </mat-select>
+                <mat-error>Sub status cannot be empty</mat-error>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-select [(value)]="claim.assignee" formControlName="assignee" placeholder="Assignee">
+                  <mat-option *ngFor="let assignee of assigneesList" [value]="assignee.code">{{assignee.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel formGroupName="general">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>General</b>
+            <mat-error *ngIf="generalValidationFailed" class="mat-error-panel">
+              <b>{{panelErrorMessage}}</b></mat-error>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <table>
+            <tr>
+              <th>Policy</th>
+              <th></th>
+              <th>Device</th>
+            </tr>
+            <tr>
+              <td class="tdlabel"><strong>Policy Holder's Name</strong></td>
+              <td class="tdvalue">{{ claim?.customerName}} </td>
+              <!-- <td class="tdvalue">{{  }}</td> -->
+              <td class="tdlabel"><strong></strong></td>
+              <td class="tdvalue"></td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><strong>Policy No.</strong></td>
+              <td class="tdvalue">{{ claim?.policyNo }}</td>
+              <td class="tdlabel"><strong>IMEI</strong></td>
+              <td class="tdvalue">{{ claim?.imei }}</td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><b>Status</b></td>
+              <td class="tdvalue">{{claim?.policyStatus}}</td>
+              <td class="tdlabel"><b>Make</b></td>
+              <td class="tdvalue">{{ claim?.make }}</td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><b>Coverage</b></td>
+              <td class="tdvalue">{{ claim?.coverage }}</td>
+              <td class="tdlabel"><b>Model</b></td>
+              <td class="tdvalue">{{ claim?.model }}</td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><b>Product</b></td>
+              <td class="tdvalue">{{claim?.productName}}</td>
+              <td class="tdlabel"><b>RRP</b></td>
+              <td class="tdvalue">{{claim?.rrp | number : '1.2-2'}}</td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><b>Product Description</b></td>
+              <td class="tdvalue">{{claim?.productDesc}}</td>
+              <td class="tdlabel"><b>Colour</b></td>
+              <td class="tdvalue">{{claim?.colour}}</td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><b>Policy Period</b></td>
+              <td class="tdvalue">{{claim?.policyStartDate}} to {{claim?.policyEndDate}}</td>
+              <td class="tdlabel"><b>Storage</b></td>
+              <td class="tdvalue">{{claim?.memoryStorage == '0' ? null : claim?.memoryStorage}}</td>
+            </tr>
+            <tr>
+              <td class="tdlabel"><b>Balance RRP</b></td>
+              <td class="tdvalue">{{claim?.balanceRRP | number : '1.2-2' }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel formGroupName="claimDetailsPanel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Claim Details</b>
+            <mat-error *ngIf="claimDetailsValidationFailed" class="mat-error-panel">
+              <b>{{panelErrorMessage}}</b></mat-error>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <table>
+            <tr>
+              <td class="tdlabel">
+                <b>Claim Type</b><br>
+                {{claim?.claimType}}
+              </td>
+              <td class="tdlabel">
+                <b>When did it happen?</b><br>
+                Date: {{ claim?.dateOfIncident }}
+              </td>
+              <td class="tdlabel">
+                <b>Time:</b>
+                <br>{{ claim?.timeOfIncident}}
+              </td>
+              <td>
+                <b>Source/Channel</b><br>
+                {{ claim?.channel }}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b class="label-claim">Who is the claimant?</b><br>
+                {{claim?.relationship}}
+              </td>
+              <!-- Fullname - Uneditable -->
+              <td *ngIf="claim?.relationship === 'self'">
+                <b>Full Name</b><br>
+                {{claim?.claimantName}}
+              </td>
+              <!-- Fullname - Editable -->
+              <td *ngIf="claim?.relationship !== 'self'">
+                <mat-form-field style="width: 80%;">
+                  <b>Full Name</b><br>
+                  <input (input)="claim.claimantName=$event.target.value" [value]="claim.claimantName"
+                    formControlName="claimantName" matInput type="text">
+                  <mat-error>Name cannot be empty</mat-error>
+                </mat-form-field>
+              </td>
+              <!-- Tel - Uneditable -->
+              <td *ngIf="claim?.relationship === 'self'">
+                <b>Tel</b><br>
+                {{claim?.claimantContact}}
+              </td>
+              <!-- Tel - Editable -->
+              <td *ngIf="claim?.relationship !== 'self'">
+                <mat-form-field style="width: 80%;">
+                  <b>Tel</b><br>
+                  <input (input)="claim.claimantContact=$event.target.value" [value]="claim.claimantContact"
+                    formControlName="claimantContact" matInput type="number">
+                  <mat-error>Contact cannot be empty</mat-error>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field style="width: 80%;">
+                  <b>Alternate Tel</b><br>
+                  <input (input)="claim.claimantAlternateContact=$event.target.value"
+                    [(value)]="claim.claimantAlternateContact" formControlName="claimantAlternateContact" matInput
+                    type="number">
+                  <mat-error>Contact cannot be empty</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <!-- Email - Uneditable -->
+              <td *ngIf="claim?.relationship === 'self'">
+                <b>Claimant Email</b><br>
+                {{claim?.claimantEmail}}
+              </td>
+              <!-- Email - Editable -->
+              <td *ngIf="claim?.relationship !== 'self'">
+                <mat-form-field style="width: 80%;">
+                  <b>Claimant Email</b>
+                  <input (input)="claim.claimantEmail=$event.target.value" [value]="claim.claimantEmail"
+                    formControlName="claimantEmail" matInput required type="text">
+                  <mat-error>Email cannot be empty</mat-error>
+                </mat-form-field>
+              </td>
+              <td>
+                <b>Where did incident happen ?</b><br>
+                {{claim?.withinCountry ? 'Within Country' : 'Out of Country'}}
+              </td>
+            </tr>
+            <tr [hidden]="claim?.withinCountry">
+              <td>
+                <b>Travel Date</b>
+                From: {{claim?.travelDateTo}} to {{claim?.travelDateTo}}
+              </td>
+            </tr>
+          </table>
+          <br>
+          <b>How did this happen?</b>
+          <mat-form-field style="width: 80%;">
+            <textarea (input)="claim.issueDesc=$event.target.value" [value]="claim.issueDesc"
+              formControlName="issueDesc" matInput maxlength="10000" minlength="50"></textarea>
+            <mat-error>Issue Description cannot be empty and must be in range of 50 to 10000</mat-error>
+          </mat-form-field>
+          <br><br>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel formGroupName="deviceAssessment">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Device Assessment</b>
+            <mat-error *ngIf="deviceAssessmentValidationFailed" class="mat-error-panel">
+              <b>{{panelErrorMessage}}</b></mat-error>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <tr>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Assessed by</mat-label>
+                <input (input)="claim.assessBy=$event.target.value" [value]="claim.assessBy" formControlName="assessBy"
+                  matInput>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Assessed on</mat-label>
+                <input (input)="claim.assessOn=$event.target.value" [matDatepicker]="assessOn" [value]="claim.assessOn"
+                  class="text-css" formControlName="assessOn" matInput />
+                <mat-datepicker-toggle [for]="assessOn" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #assessOn [disabled]="!editClaimBtn"></mat-datepicker>
+                <mat-error>Assessed date cannot be empty</mat-error>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Reference No.</mat-label>
+                <input (input)="claim.assessReferenceNo=$event.target.value" [value]="claim.assessReferenceNo"
+                  formControlName="assessReferenceNo" matInput>
+              </mat-form-field>
+            </td>
+          <tr>
+        </table>
+        <table>
+          <tr>
+            <label>Diagnostic outcome. What should we do with the device?</label><br>
+            <mat-radio-group (change)="onDiagnosticChange($event.value);" formControlName="diagnosticOutcome">
+              <mat-radio-button value="ADA">Repair(AD)</mat-radio-button>&nbsp;&nbsp;
+              <mat-radio-button value="BER">Replace(BER)</mat-radio-button>&nbsp;&nbsp;
+              <mat-radio-button value="IWA">In-Warranty(IW)</mat-radio-button>&nbsp;&nbsp;
+              <mat-radio-button value="EWA">Extended Warranty(EW)</mat-radio-button>
+            </mat-radio-group>
+            <br>
+          </tr>
+        </table>
+        <br>
+        <!-- show replace fields -->
+        <table [hidden]="!replaceFields">
+          <tr>
+            <td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Replacement Section</b></td>
+          </tr>
+          <tr>
+            <td>
+              <table>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 160%;">
+                      <textarea (input)="claim.reasonForReplace=$event.target.value" [value]="claim.reasonForReplace"
+                        formControlName="reasonForReplace" matInput placeholder="Reason for replacement"></textarea>
+                    </mat-form-field>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">IMEI*</mat-label>
+                      <input (input)="claim.replaceImei=$event.target.value" [value]="claim.replaceImei"
+                        formControlName="replaceImei" matInput />
+                      <mat-error>IMEI cannot be empty</mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Make</mat-label>
+                      <input (input)="claim.replaceMake=$event.target.value" [value]="claim.replaceMake"
+                        formControlName="replaceMake" matInput />
+                      <mat-error>Make cannot be empty</mat-error>
+                    </mat-form-field>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Model</mat-label>
+                      <input (input)="claim.replaceModel=$event.target.value" [value]="claim.replaceModel"
+                        formControlName="replaceModel" matInput />
+                      <mat-error>Model cannot be empty</mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Colour</mat-label>
+                      <input (input)="claim.replaceColor=$event.target.value" [value]="claim.replaceColor"
+                        formControlName="replaceColor" matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Storage</mat-label>
+                      <input (input)="claim.replaceStorage=$event.target.value" [value]="claim.replaceStorage"
+                        formControlName="replaceStorage" matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+              <table>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Replacement Cost</mat-label>
+                      <input (input)="claim.replacementCost=$event.target.value" [value]="claim.replacementCost"
+                        appRoundoffDecimal formControlName="replacementCost" matInput>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Diagnostic Cost</mat-label>
+                      <input (input)="claim.diagnosticCost=$event.target.value" [value]="claim.diagnosticCost"
+                        appRoundoffDecimal formControlName="diagnosticCost" matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Replacement Tax</mat-label>
+                      <input (input)="claim.replacementTax=$event.target.value" [value]="claim.replacementTax"
+                        appRoundoffDecimal formControlName="replacementTax" matInput>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Total Replacement Cost</mat-label>
+                      <input (input)="claim.totalReplacementCost=$event.target.value"
+                        [value]="claim.totalReplacementCost" appRoundoffDecimal formControlName="totalReplacementCost"
+                        matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- end replace-->
+
+        </table>
+        <!-- show repair fields -->
+        <table>
+          <tr>
+            <td>
+              <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quotation Costs</b>
+              <table [hidden]="!repairFields">
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Parts costs</mat-label>
+                      <input (input)="claim.quotationPartCosts=$event.target.value" [value]="claim.quotationPartCosts"
+                        appRoundoffDecimal formControlName="quotationPartCosts" matInput>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Labour costs</mat-label>
+                      <input (input)="claim.quotationLabourCosts=$event.target.value"
+                        [value]="claim.quotationLabourCosts" appRoundoffDecimal formControlName="quotationLabourCosts"
+                        matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Tax</mat-label>
+                      <input (input)="claim.quotationRepairedTax=$event.target.value"
+                        [value]="claim.quotationRepairedTax" appRoundoffDecimal formControlName="quotationRepairedTax"
+                        matInput>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Total cost</mat-label>
+                      <input (input)="claim.quotationRepairedTotalCost=$event.target.value"
+                        [value]="claim.quotationRepairedTotalCost" appRoundoffDecimal
+                        formControlName="quotationRepairedTotalCost" matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Final Costs</b>
+              <table [hidden]="!repairFields">
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Parts costs</mat-label>
+                      <input (input)="claim.finalPartCosts=$event.target.value" [value]="claim.finalPartCosts"
+                        appRoundoffDecimal formControlName="finalPartCosts" matInput>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Labour costs</mat-label>
+                      <input (input)="claim.finalLabourCosts=$event.target.value" [value]="claim.finalLabourCosts"
+                        appRoundoffDecimal formControlName="finalLabourCosts" matInput>
+                    </mat-form-field>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Tax</mat-label>
+                      <input (input)="claim.finalRepairedTax=$event.target.value" [value]="claim.finalRepairedTax"
+                        appRoundoffDecimal formControlName="finalRepairedTax" matInput>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field style="width: 70%;">
+                      <mat-label class="label-claim">Total cost</mat-label>
+                      <input (input)="claim.finalRepairedTotalCost=$event.target.value"
+                        [value]="claim.finalRepairedTotalCost" appRoundoffDecimal
+                        formControlName="finalRepairedTotalCost" matInput>
+                      <mat-error>Total Cost cannot be 0.00</mat-error>
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel formGroupName="paymentDetails">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Payment Details</b>
+            <mat-error *ngIf="paymentDetailsValidationFailed" class="mat-error-panel">
+              <b>{{panelErrorMessage}}</b></mat-error>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <mat-checkbox formControlName="requiredPayment">All required payments have been made</mat-checkbox>
+          <br>
+          <tr>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Amount received</mat-label>
+                <input (input)="claim.receivedAmount=$event.target.value" [value]="claim.receivedAmount"
+                  appRoundoffDecimal formControlName="receivedAmount" matInput>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Payment method</mat-label>
+                <mat-select [(value)]="claim.paymentMethod" formControlName="paymentMethod">
+                  <mat-option value="CC">Credit Card</mat-option>
+                  <mat-option value="CA">Cash</mat-option>
+                  <mat-option value="TT">Bank Transfer</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Reference No.</mat-label>
+                <input (input)="claim.paymentReferenceNo=$event.target.value" [value]="claim.paymentReferenceNo"
+                  formControlName="paymentReferenceNo" matInput>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label class="label-claim">Excess Fee</mat-label>
+                <input (input)="claim.excessFee=$event.target.value" [value]="claim.excessFee" appRoundoffDecimal
+                  formControlName="excessFee" matInput>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr class="supportingDocs">
+            <header>
+              <td>
+                <p>Transaction Slip</p>
+              </td>
+              <td class="fileUpload">
+                <input #fileInput (change)="validateFile($event,'transaction')" [disabled]="!editClaimBtn" type="file"
+                  id="agentDoc">
+                <button mat-raised-button color="blue" (click)="onSelectedFile($event, fileInput, 'transaction')"
+                  [disabled]="!editClaimBtn">
+                  <span>Upload File</span>
+                </button>
+              </td>
+            </header>
+            <section>
+              <ul>
+                <li *ngFor="let transactionFile of getFilesFor('transaction'); let i = index">
+                  <a class="viewDocument" [href]="goToLink('transaction', i)" target="_blank">
+                    {{getFileName(transactionFile)}}
+                  </a>
+                  <a *ngIf="editClaimBtn" class="deleteDocument"
+                    (click)="removeSelectedFile('transaction', transactionFile)">
+                    <mat-icon>delete</mat-icon>
+                  </a>
+                </li>
+              </ul>
+            </section>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel formGroupName="logisticsDetails">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Logistics Details</b>
+            <mat-error *ngIf="logisticsDetailsValidationFailed" class="mat-error-panel">
+              <b>{{panelErrorMessage}}</b></mat-error>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <!-- Requires Pickup?  -->
+        <section class="requiresCheckbox">
+          <label>Customer requires pickup?</label><br>
+          <mat-radio-group formControlName="requiresPickup">
+            <mat-radio-button [value]="true">
+              Yes
+            </mat-radio-button>&nbsp;&nbsp;
+            <mat-radio-button [value]="false">
+              No, customer drops device directly at ASC
+            </mat-radio-button>
+          </mat-radio-group>
+        </section>
+
+        <!-- Pickup Schedule & Details       -->
+        <div *ngIf="this.claim.requiresPickup; else selfDropOff">
+          <table>
+            <tr>
+              <td class="td-align logisticsLocation">
+                <b>Pickup location</b><br>
+                <mat-checkbox formControlName="copyPolicyAddressToCollect">Same as policy address</mat-checkbox>
+                <mat-card class="card-container">
+                  <table>
+                    <tr>
+                      <td>
+                        <mat-form-field class="tp-full-width" appearance="outline">
+                          <input (keyup)="autoCompleteSearch($event,claim.collectCountry)" matInput
+                            placeholder="Search Address" [matAutocomplete]="auto" formControlName="searchAutoComplete"
+                            [readonly]="!editClaimBtn">
+                          <mat-icon matSuffix>search</mat-icon>
+
+                        </mat-form-field>
+                        <mat-autocomplete #auto="matAutocomplete">
+                          <mat-option *ngFor=" let item of searchList" matTooltip="{{item.description}}"
+                            matTooltipClass="autocomplete-tooltip"
+                            (onSelectionChange)="setAddress(item.placeId,item.country)">
+                            {{item.description}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 150%;">
+                          <input (input)="claim.collectAddress1=$event.target.value" [value]="claim.collectAddress1"
+                            formControlName="collectAddress1" matInput placeholder="Address1">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 150%;">
+                          <input (input)="claim.collectAddress2=$event.target.value" [value]="claim.collectAddress2"
+                            formControlName="collectAddress2" matInput placeholder="Address2">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <input (input)="claim.collectPostcode=$event.target.value" [value]="claim.collectPostcode"
+                            formControlName="collectPostcode" matInput placeholder="Postal Code">
+
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <input (input)="claim.collectState=$event.target.value" [value]="claim.collectState"
+                            formControlName="collectState" matInput placeholder="State">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <input (input)="claim.collectCity=$event.target.value" [value]="claim.collectCity"
+                            formControlName="collectCity" matInput placeholder="City">
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <mat-select (selectionChange)="claim.collectCountry = $event.value"
+                            formControlName="collectCountry" placeholder="Country">
+                            <mat-option *ngFor="let country of countries" [value]="country.twoCharCode">{{country.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-card>
+              </td>
+              <td class="logisticsDetails">
+                <!-- Pickup Schedule -->
+                <b>Pickup Schedule</b><br>
+                <mat-card class="card-container">
+                  <table>
+                    <!-- collectDate & Time -->
+                    <tr>
+                      <td class="td-align">
+                        <mat-form-field>
+                          <input [matDatepicker]="collectDate" [min]="selectMinDate(claim.collectDate)" class="text-css"
+                            formControlName="collectDate" matInput placeholder="Scheduled pickup date"
+                            toggleDatePicker />
+                          <mat-datepicker-toggle [for]="collectDate" matSuffix></mat-datepicker-toggle>
+                          <mat-datepicker #collectDate></mat-datepicker>
+                          <mat-error>Scheduled Pickup date is invalid</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <mat-label class="label-claim">Pickup time</mat-label>
+                          <input [readonly]="true" atp-time-picker formControlName="collectTime" matInput
+                            placeholder="Scheduled pickup time" type="time" />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <!-- collectDate & Time -->
+                    <tr>
+                      <td class="td-align">
+                        <mat-form-field>
+                          <input [matDatepicker]="actualCollectDate" class="text-css"
+                            formControlName="actualCollectDate" matInput placeholder="Actual pickup date"
+                            toggleDatePicker />
+                          <mat-datepicker-toggle [for]="actualCollectDate" matSuffix></mat-datepicker-toggle>
+                          <mat-datepicker #actualCollectDate></mat-datepicker>
+                          <mat-error>Actual pickup date is invalid</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <mat-label class="label-claim">Actual pickup time</mat-label>
+                          <input [readonly]="true" atp-time-picker formControlName="actualCollectTime" matInput
+                            placeholder="Actual pickup time" type="time" />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <!-- collectDate & Time -->
+                    <tr>
+                      <td class="td-align">
+                        <mat-form-field>
+                          <input [matDatepicker]="arrivalCollectDate" class="text-css"
+                            formControlName="arrivalCollectDate" matInput placeholder="Arrived at repair center on"
+                            toggleDatePicker />
+                          <mat-datepicker-toggle [for]="arrivalCollectDate" matSuffix></mat-datepicker-toggle>
+                          <mat-datepicker #arrivalCollectDate></mat-datepicker>
+                          <mat-error>Arrived at repair center on date is invalid</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <mat-label class="label-claim">Arrived at repair center time</mat-label>
+                          <input [readonly]="true" atp-time-picker formControlName="arrivalCollectTime" matInput
+                            placeholder="Arrived at repair center on time" type="time" />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-card>
+
+                <!-- Courier -->
+                <b class="courierHeading">Courier Details</b><br>
+                <mat-card class="card-container">
+                  <table>
+                    <tr>
+                      <td>
+                        <mat-form-field>
+                          <mat-select [(value)]="claim.collectStatus" formControlName="collectStatus"
+                            placeholder="Status">
+                            <mat-option *ngFor="let logisticStatus of logisticStatuses" [value]="logisticStatus.id">
+                              {{logisticStatus.value}}</mat-option>
+                          </mat-select>
+                          <mat-error>Pickup status cannot be empty</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field style="width: 90%;">
+                          <input (input)="claim.collectTracking=$event.target.value" [value]="claim.collectTracking"
+                            formControlName="collectTracking" matInput placeholder="Tracking No.">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 90%;">
+                          <mat-select [(value)]="claim.collectCourier" formControlName="collectCourier"
+                            placeholder="Courier">
+                            <mat-option *ngFor="let logisticCourier of logisticCouriers" [value]="logisticCourier.id">
+                              {{logisticCourier.value}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-card>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!-- Dropoff -->
+        <ng-template #selfDropOff>
+          <!-- dropOff Schedule -->
+          <b>Self drop-off Schedule</b><br>
+          <mat-card class="card-container">
+            <table>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input [matDatepicker]="scheduledDropOffDate" [min]="selectMinDate(claim.scheduledDropOffDate)"
+                      class="text-css" formControlName="scheduledDropOffDate" matInput
+                      placeholder="Scheduled dropoff date" toggleDatePicker />
+                    <mat-datepicker-toggle [for]="scheduledDropOffDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #scheduledDropOffDate></mat-datepicker>
+                    <mat-error>Scheduled drop off date is invalid</mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label class="label-claim">Scheduled drop-off time</mat-label>
+                    <input [readonly]="true" atp-time-picker formControlName="scheduledDropOffTime" matInput
+                      placeholder="Scheduled drop-off time" type="time" />
+                  </mat-form-field>
+                </td>
+              </tr>
+
+              <!-- actualDropOff Date & Time -->
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input [matDatepicker]="actualDropOffDate" class="text-css" formControlName="actualDropOffDate"
+                      matInput placeholder="Actual dropoff date" toggleDatePicker />
+                    <mat-datepicker-toggle [for]="actualDropOffDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #actualDropOffDate></mat-datepicker>
+                    <mat-error>Actual drop off date is invalid</mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label class="label-claim">Actual drop off time is invalid</mat-label>
+                    <input [readonly]="true" atp-time-picker formControlName="actualDropOffTime" matInput
+                      placeholder="Actual drop off time" type="time" />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+          </mat-card>
+        </ng-template>
+
+        <!-- Customer requires logistics? -->
+        <section class="requiresCheckbox">
+          <label>Customer requires delivery?</label><br>
+          <mat-radio-group formControlName="requiresDelivery">
+            <mat-radio-button [value]="true">
+              Yes
+            </mat-radio-button>&nbsp;&nbsp;
+            <mat-radio-button [value]="false">
+              No, customer drops device from ASC
+            </mat-radio-button>
+          </mat-radio-group>
+        </section>
+
+        <!-- Delivery Location & Details       -->
+        <div *ngIf="this.claim.requiresDelivery; else selfPickUp">
+          <table>
+            <tr>
+              <td class="td-align logisticsLocation">
+                <b>Delivery location</b>
+                <br>
+                <mat-checkbox formControlName="copyPolicyAddressToDelivery">Same
+                  as policy address
+                </mat-checkbox>
+                <mat-card class="card-container">
+                  <table>
+                    <tr>
+                      <td>
+                        <mat-form-field class="tp-full-width" appearance="outline">
+                          <input (keyup)="autoCompleteSearch($event,claim.deliveryCountry)" matInput
+                            placeholder="Search Address" [matAutocomplete]="auto" [readonly]="!editClaimBtn">
+                          <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
+                        <mat-autocomplete #auto="matAutocomplete">
+                          <mat-option *ngFor=" let item of searchList" matTooltip="{{item.description}}"
+                            matTooltipClass="autocomplete-tooltip"
+                            (onSelectionChange)="setDeliveryAddress(item.placeId,item.country)">
+                            {{item.description}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 150%;">
+                          <input (input)="claim.deliveryAddress1=$event.target.value" [value]="claim.deliveryAddress1"
+                            formControlName="deliveryAddress1" matInput placeholder="Address1">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 150%;">
+                          <input (input)="claim.deliveryAddress2=$event.target.value" [value]="claim.deliveryAddress2"
+                            formControlName="deliveryAddress2" matInput placeholder="Address2">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <input (input)="claim.deliveryPostcode=$event.target.value" [value]="claim.deliveryPostcode"
+                            formControlName="deliveryPostcode" matInput placeholder="Postal Code">
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <input (input)="claim.deliveryState=$event.target.value" [value]="claim.deliveryState"
+                            formControlName="deliveryState" matInput placeholder="State">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <input (input)="claim.deliveryCity=$event.target.value" [value]="claim.deliveryCity"
+                            formControlName="deliveryCity" matInput placeholder="City">
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field style="width: 70%;">
+                          <mat-select (selectionChange)="claim.deliveryCountry = $event.value"
+                            formControlName="deliveryCountry" placeholder="Country">
+                            <mat-option *ngFor="let country of countries" [value]="country.twoCharCode">{{country.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-card>
+              </td>
+              <td class="logisticsDetails">
+                <!-- Delivery Schedule -->
+                <b>Delivery Schedule</b><br>
+                <mat-card class="card-container">
+                  <table>
+                    <!-- Delivery Date -->
+                    <tr>
+                      <td>
+                        <mat-form-field>
+                          <input [matDatepicker]="deliveryDate" [min]="selectMinDate(claim.deliveryDate)"
+                            class="text-css" formControlName="deliveryDate" matInput
+                            placeholder="Scheduled Delivery Date" toggleDatePicker />
+                          <mat-datepicker-toggle [for]="deliveryDate" matSuffix></mat-datepicker-toggle>
+                          <mat-datepicker #deliveryDate></mat-datepicker>
+                          <mat-error>Scheduled Delivery date cannot be empty</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <mat-label class="label-claim">Delivery time</mat-label>
+                          <input (input)="claim.deliveryTime=$event.target.value" [value]="claim.deliveryTime"
+                            atp-time-picker formControlName="deliveryTime" matInput placeholder="Delivery time"
+                            type="time" />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <!-- Actual Delivery Date -->
+                    <tr>
+                      <td>
+                        <mat-form-field>
+                          <input [matDatepicker]="actualDeliveryDate" class="text-css"
+                            formControlName="actualDeliveryDate" matInput placeholder="Actual delivery date"
+                            toggleDatePicker />
+                          <mat-datepicker-toggle [for]="actualDeliveryDate" matSuffix></mat-datepicker-toggle>
+                          <mat-datepicker #actualDeliveryDate></mat-datepicker>
+                          <mat-error>Actual delivery date cannot be empty</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <mat-label class="label-claim">Actual delivery time</mat-label>
+                          <input [readonly]="true" atp-time-picker formControlName="actualDeliveryTime" matInput
+                            placeholder="Actual delivery time" type="time" />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <!-- Actual Delivery Date -->
+                    <tr>
+                      <td>
+                        <mat-form-field>
+                          <input [matDatepicker]="customerDeliveryDate" class="text-css"
+                            formControlName="customerDeliveryDate" matInput placeholder="Delivered to customer on"
+                            toggleDatePicker />
+                          <mat-datepicker-toggle [for]="customerDeliveryDate" matSuffix></mat-datepicker-toggle>
+                          <mat-datepicker #customerDeliveryDate></mat-datepicker>
+                          <mat-error>Delivered to customer date cannot be empty</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <mat-label class="label-claim">Delivered to customer at time</mat-label>
+                          <input [readonly]="true" atp-time-picker formControlName="customerDeliveryTime" matInput
+                            placeholder="Delivered to customer at time" type="time" />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-card>
+                <!-- Delivery (Courier) -->
+                <br><b>Courier Details</b>
+                <mat-card class="card-container">
+                  <table>
+                    <tr>
+                      <td>
+                        <!-- Status -->
+                        <mat-form-field>
+                          <mat-select [(value)]="claim.deliveryStatus" formControlName="deliveryStatus"
+                            placeholder="Status">
+                            <mat-option *ngFor="let logisticStatus of logisticStatuses" [value]="logisticStatus.id">
+                              {{logisticStatus.value}}</mat-option>
+                          </mat-select>
+                          <mat-error>Pickup status cannot be empty</mat-error>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <!-- Tracking No -->
+                        <mat-form-field style="width: 90%;">
+                          <input (input)="claim.deliveryTracking=$event.target.value" [value]="claim.deliveryTracking"
+                            formControlName="deliveryTracking" matInput placeholder="Tracking No."
+                            placeholder="Tracking No.">
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <!-- Courier -->
+                      <td>
+                        <mat-form-field style="width: 90%;">
+                          <mat-select [(value)]="claim.deliveryCourier" formControlName="deliveryCourier"
+                            placeholder="Courier">
+                            <mat-option *ngFor="let logisticCourier of logisticCouriers" [value]="logisticCourier.id">
+                              {{logisticCourier.value}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-card>
+                <br>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!-- Dropoff Schedule       -->
+        <ng-template #selfPickUp>
+          <!-- pickup Schedule -->
+          <b>Self pick-up Schedule</b><br>
+          <mat-card class="card-container">
+            <table>
+              <tr>
+                <td class="td-align">
+                  <mat-form-field>
+                    <input [matDatepicker]="scheduledPickUpDate" [min]="selectMinDate(claim.scheduledPickUpDate)"
+                      class="text-css" formControlName="scheduledPickUpDate" matInput
+                      placeholder="Scheduled pick-up date" toggleDatePicker />
+                    <mat-datepicker-toggle [for]="scheduledPickUpDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #scheduledPickUpDate></mat-datepicker>
+                    <mat-error>Scheduled pick-up date is invalid</mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label class="label-claim">Scheduled pick-up time</mat-label>
+                    <input [readonly]="true" atp-time-picker formControlName="scheduledPickUpTime" matInput
+                      placeholder="Scheduled pick-up time" type="time" />
+                  </mat-form-field>
+                </td>
+              </tr>
+
+              <!-- actualDropOff Date & Time -->
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <input [matDatepicker]="actualPickUpDate" class="text-css" formControlName="actualPickUpDate"
+                      matInput placeholder="Actual pick-up date" toggleDatePicker />
+                    <mat-datepicker-toggle [for]="actualPickUpDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #actualPickUpDate></mat-datepicker>
+                    <mat-error>Actual pick-up date is invalid</mat-error>
+                  </mat-form-field>
+                </td>
+
+                <td>
+                  <mat-form-field>
+                    <mat-label class="label-claim">Actual pick-up time</mat-label>
+                    <input [readonly]="true" atp-time-picker formControlName="actualPickUpTime" matInput
+                      placeholder="Actual pick-up time" type="time" />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+          </mat-card>
+        </ng-template>
+
+        <!-- Repair Center Location -->
+        <b>Repair center location</b><br>
+        <mat-card class="card-container" style="margin-top:6px;">
+          <table>
+            <tr>
+              <td>
+                <mat-form-field style="width: 150%;">
+                  <input (input)="claim.dispatchCenterName=$event.target.value" [value]="claim.dispatchCenterName"
+                    formControlName="dispatchCenterName" matInput placeholder="Name of repair center">
+                  <mat-error>Name of repair center cannot be more than 50 characters</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field class="tp-full-width" appearance="outline">
+                  <input (keyup)=" autoCompleteSearch($event,claim.dispatchCountry)" matInput
+                    placeholder="Search Address" [matAutocomplete]="auto" [readonly]="!editClaimBtn">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor=" let item of searchList" matTooltip="{{item.description}}"
+                    matTooltipClass="autocomplete-tooltip"
+                    (onSelectionChange)="setDispatchAddress(item.placeId,item.country)">
+                    {{item.description}}
+                  </mat-option>
+                </mat-autocomplete>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field style="width: 150%;">
+                  <input (input)="claim.dispatchAddress1=$event.target.value" [value]="claim.dispatchAddress1"
+                    formControlName="dispatchAddress1" matInput placeholder="Address1">
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field style="width: 150%;">
+                  <input (input)="claim.dispatchAddress2=$event.target.value" [value]="claim.dispatchAddress2"
+                    formControlName="dispatchAddress2" matInput placeholder="Address2">
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field style="width: 70%;">
+                  <input (input)="claim.dispatchPostcode=$event.target.value" [value]="claim.dispatchPostcode"
+                    formControlName="dispatchPostcode" matInput placeholder="Postal Code">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field style="width: 70%;">
+                  <input (input)="claim.dispatchState=$event.target.value" [value]="claim.dispatchState"
+                    formControlName="dispatchState" matInput placeholder="State">
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field style="width: 70%;">
+                  <input (input)="claim.dispatchCity=$event.target.value" [value]="claim.dispatchCity"
+                    formControlName="dispatchCity" matInput placeholder="City">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field style="width: 70%;">
+                  <mat-select (selectionChange)="claim.dispatchCountry = $event.value" formControlName="dispatchCountry"
+                    placeholder="Country">
+                    <mat-option *ngFor="let country of countries" [value]="country.twoCharCode">{{country.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+        </mat-card>
+      </mat-expansion-panel>
+      <mat-expansion-panel formGroupName="supportingDocuments">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Supporting Documents</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <tr class="supportingDocs" *ngFor="let docSection of supportingDocumentSections">
+            <header>
+              <td>
+                <p>{{docSection.title}}</p>
+              </td>
+              <td class="fileUpload">
+                <!-- upload file button-->
+                <input #fileInput [class]="docSection.type + 'FileInput'" [disabled]="!editClaimBtn" type="file"
+                  (change)="validateFile($event,docSection.type)">
+                <button mat-raised-button color="blue" (click)="onSelectedFile($event, fileInput, docSection.type)"
+                  [disabled]="!editClaimBtn">
+                  <span>Upload File</span>
+                </button>
+              </td>
+            </header>
+            <section>
+              <ul>
+                <li *ngFor="let supportFile of getFilesFor(docSection.type); let i = index">
+                  <a class="viewDocument" [href]="goToLink(docSection.type, i)" target="_blank">
+                    {{getFileName(supportFile)}}
+                  </a>
+                  <a *ngIf="editClaimBtn" class="deleteDocument"
+                    (click)="removeSelectedFile(docSection.type, supportFile)">
+                    <mat-icon>delete</mat-icon>
+                  </a>
+                </li>
+              </ul>
+            </section>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
+
+  <app-activity-new activityType="CLAIM" relatedId="{{claim?.claimNo}}"></app-activity-new>

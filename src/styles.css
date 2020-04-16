@@ -1,0 +1,148 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~ngx-toastr/toastr';
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,700i,900,900i&display=swap');
+
+body {
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+}
+
+.basic-container {
+    padding: 30px;
+}
+
+.version-info {
+    font-size: 8pt;
+    float: right;
+}
+
+.heading {
+    display: inline-block;
+    text-align: center;
+    color: #2EB5C7;
+    max-height: 120px;
+    min-width: 120px;
+    border-radius: 2px;
+    padding: 10px;
+}
+
+.div-padding {
+    margin-left: 20px;
+}
+
+.div-padding-button {
+    margin-top: 10px;
+    color: white;
+    background-color: #2EB5C7;
+    margin-left: 20px;
+}
+
+.fileUploadCss {
+    height: 20px;
+    margin-top: 20px;
+    color: white;
+    background-color: rgb(124, 248, 124);
+    padding-bottom: 3px;
+    padding-left: 3px;
+}
+
+.label {
+    color: rgb(74, 28, 240);
+    padding-left: 10px;
+}
+
+.overlay {
+    position: fixed;
+    top: 200px;
+    left: 600px;
+}
+
+.spacer {
+    height: 1em;
+}
+
+.mat-form-field-underline {
+    background-color: #2EB5C7 !important;
+    border: 1px #2EB5C7;
+}
+
+.mat-form-field {
+    font-size: 12px;
+}
+
+.navMenuText {
+    display: inline;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.navMenuText:first-of-type {
+    margin-top: 9px;
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+#logo {
+    margin-top: 100px;
+    text-align: center;
+}
+
+a.disabled {
+    color: gray;
+    cursor: not-allowed;
+    text-decoration: underline;
+}
+
+
+.supportingDocs p {
+    margin-top: -1px;
+    font-weight: bold;
+}
+
+.supportingDocs ul {
+    display: block;
+    margin-top: -8px;
+    margin-left: -38px;
+}
+
+.supportingDocs li {
+    list-style: none;
+
+}
+
+.supportingDocs {
+    display: block;
+    vertical-align: top;
+}
+
+.supportingDocs mat-icon {
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.supportingDocs button {
+    margin-left: -56px;
+}
+
+.supportingDocs header {
+    height: 50px;
+    border-top: 1px solid #f1f1f1;
+    border-bottom: 1px solid #f1f1f1;
+    margin-bottom: 20px;
+    padding-top: 7px;
+}
+
+.supportingDocs button {
+    color: white;
+    background-color: #2EB5C7;
+}
+
+/* Add specific height for createClaim header since it doesn't have upload button */
+.supportingDocs.createClaim header {
+    height: 33px;
+}

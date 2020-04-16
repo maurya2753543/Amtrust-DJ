@@ -1,0 +1,6 @@
+export enum LockGrantStatusEnum {
+  GRANT_STATUS_LG_003 = 'LG_003',
+  GRANT_STATUS_LG_004 = 'LG_004',
+  GRANT_STATUS_LG_002 = 'LG_002',
+  GRANT_STATUS_LG_001 = 'LG_001'
+}

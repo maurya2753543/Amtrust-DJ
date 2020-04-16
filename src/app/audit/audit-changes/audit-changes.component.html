@@ -1,0 +1,28 @@
+<h2 style="font-weight:800" mat-dialog-title>Changes for {{datas.Module}}; {{datas.Key}}</h2>
+<mat-dialog-content class="mat-typography">
+
+
+  <table>
+    <tr>
+      <th>Field</th>
+      <th *ngIf="datas.Action=='UPDATE'">Before</th>
+      <th *ngIf="datas.Action=='UPDATE'">After</th>
+      <th *ngIf="datas.Action=='INSERT'">Initial Value</th>
+    </tr>
+    <tr *ngFor="let data of datas.Changes">
+      <td>{{data.property}}</td>
+      <td *ngIf="datas.Action=='UPDATE'">
+        <div *ngIf="data.left!=null && data.left!=''">{{data.left}}</div>
+        <div *ngIf="data.left==null || data.left==''">NULL</div>
+      </td>
+      <td>
+        <div *ngIf="data.right!='' && data.right!=null">{{data.right}}</div>
+        <div *ngIf="data.right=='' || data.right==null ">NULL</div>
+      </td>
+    </tr>
+  </table>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

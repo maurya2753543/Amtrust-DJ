@@ -1,0 +1,106 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <b>Activity Log</b>
+    </mat-expansion-panel-header>
+    <div (click)="addNewActivity()" class="add-new">
+      <a>+ Add New</a>
+    </div>
+    <!-- <cdk-virtual-scroll-viewport itemSize="4"> -->
+    <div *ngFor="let activityLog of activityLogResponse; let i=index" class="description-box">
+      <form>
+        <div>
+          <mat-form-field class="width-80">
+            <input [(ngModel)]="activityLog.activityDetails.subject"
+                   [readonly]='!activityLog.activityDetails.isEditable' matInput name="subject"
+                   placeholder="Subject" style="color:rgb(12, 11, 11);"/>
+          </mat-form-field>
+
+          <div *ngIf="!activityLog.activityDetails.isEditable" class="upper-btn">
+            <button (click)="editActivity(i)" [disabled]="activityLog.activityDetails.status.code == 'AS_005'"
+                    color="accent"
+                    mat-raised-button>Edit
+            </button>
+            <!-- <button class="del-btn" mat-raised-button color="accent" (click)="deleteActivity(activityLog.activityId)">
+              Delete
+            </button> -->
+          </div>
+          <div class="sub-head">
+              <span>
+                Priority: 
+              </span>
+            <mat-form-field class="type-select width-10">
+              <mat-select [(ngModel)]="activityLog.activityDetails.priority.code"
+                          [disabled]='!activityLog.activityDetails.isEditable'
+                          name="priority" style="color:rgb(12, 11, 11);">
+                <mat-option *ngFor="let priority of priorities" [value]="priority.code">
+                  {{ priority.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <span class="type">Type: </span>
+            <mat-form-field class="type-select width-10">
+              <mat-select [(ngModel)]="activityLog.activityDetails.typeToConnect.code"
+                          [disabled]='!activityLog.activityDetails.isEditable'
+                          name="typeOfConnect">
+
+                <mat-option *ngFor="let typeOfConnect of typeOfConnects" [value]="typeOfConnect.code">
+                  {{ typeOfConnect.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <span class="type">Status:</span>
+            <mat-form-field class="type-select margin-l-20">
+              <mat-select [(ngModel)]="activityLog.activityDetails.status.code"
+                          [disabled]='!activityLog.activityDetails.isEditable'
+                          name="status">
+                <mat-option *ngFor="let status of statuses" [value]="status.code">
+                  {{ status.name }}
+                </mat-option>
+
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="desc-box">
+            <mat-form-field [class.text-show]="!activityLog.activityDetails.isShowMore" class="text-area">
+
+                <textarea [(ngModel)]="activityLog.activityDetails.description"
+                          [class.textarea-show]="!activityLog.activityDetails.isShowMore"
+                          [readonly]='!activityLog.activityDetails.isEditable' matInput
+                          maxlength="10000" name="description"
+                          placeholder="Add Description.." style="color:rgb(12, 11, 11);">
+                </textarea>
+
+            </mat-form-field>
+            <a (click)="activityLog.activityDetails.isShowMore = false;" *ngIf="activityLog.activityDetails.isShowMore"
+               class="show-more">Show More..</a>
+            <a (click)="activityLog.activityDetails.isShowMore = true;" *ngIf="!activityLog.activityDetails.isShowMore"
+               class="show-more">Show Less..</a>
+
+          </div>
+          <div *ngIf="activityLog.activityDetails.isEditable" class="bottom-btn">
+            <button (click)="saveActivity(activityLog)" [disabled]="" color="accent" mat-raised-button>Save</button>
+            <button (click)="cancelActivity(i)" class="del-btn" color="accent" mat-raised-button>
+              Cancel
+            </button>
+          </div>
+          <div class="sub-title">
+              <span
+                style="color:rgb(12, 11, 11);">Created By : {{activityLog.agentDetails[0].name}} {{activityLog.agentDetails[0].dateTimeDetails.insertDate}} {{activityLog.agentDetails[0].dateTimeDetails.insertTime}}
+                UTC </span>
+            <span style="color:rgb(12, 11, 11);">Last Updated By :
+              {{activityLog.agentDetails[1].name}}
+              {{activityLog.agentDetails[1].dateTimeDetails.updateDate}}
+              {{activityLog.agentDetails[1].dateTimeDetails.updateTime}} UTC
+              </span>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <button (click)="showMore(3)" *ngIf="!noMoreActivity" color="accent" mat-raised-button>Show More...</button>
+    <!-- </cdk-virtual-scroll-viewport> -->
+
+  </mat-expansion-panel>
+</mat-accordion>

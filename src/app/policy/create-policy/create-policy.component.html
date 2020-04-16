@@ -1,0 +1,312 @@
+<h1 class="heading">
+  AMS Policy Create
+</h1>
+<div>
+  <form (ngSubmit)="onSubmit()" [formGroup]="policyForm">
+    <div *ngIf="response && response.status && response.status==='ERROR'">
+      <div *ngFor="let msg of response.message">
+        <mat-error>
+          <li><b>{{msg}}</b></li>
+        </mat-error>
+      </div>
+    </div>
+    <table>
+      <mat-card>
+        <mat-card-title>Customer Information</mat-card-title>
+      </mat-card>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer Name</mat-label>
+            <input (input)="policyModel.customerName=$event.target.value" [value]="policyModel.customerName"
+                   formControlName="customerName" matInput
+                   maxlength="200" required
+                   type="text"/>
+            <mat-error>Customer Name Can Not Be empty</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer Id</mat-label>
+            <input (input)="policyModel.custIdNumber=$event.target.value" [value]="policyModel.custIdNumber"
+                   formControlName="custIdNumber" matInput
+                   type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer Mobile Number</mat-label>
+            <input (input)="policyModel.custMobileNumber=$event.target.value" [value]="policyModel.custMobileNumber"
+                   formControlName="custMobileNumber"
+                   matInput
+                   required type="text"/>
+            <mat-error>{{getErrorMessage("custMobileNumber")}}</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer Email</mat-label>
+            <input (input)="policyModel.customerEmail=$event.target.value" [value]="policyModel.customerEmail"
+                   class="text-css" formControlName="customerEmail"
+                   matInput required
+                   type="text"/>
+            <mat-error>Email entered is invalid</mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer Address</mat-label>
+            <input (input)="policyModel.custAddress=$event.target.value" [value]="policyModel.custAddress"
+                   class="text-css" formControlName="customerAddress"
+                   matInput
+                   type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer PostalCode</mat-label>
+            <input (input)="policyModel.custPostalCode=$event.target.value" [value]="policyModel.custPostalCode"
+                   class="text-css" formControlName="custPostalCode"
+                   matInput
+                   type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer City</mat-label>
+            <input (input)="policyModel.customerCity=$event.target.value" [value]="policyModel.customerCity"
+                   class="text-css" formControlName="customerCity"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Customer State</mat-label>
+            <input (input)="policyModel.customerState=$event.target.value" [value]="policyModel.customerState"
+                   class="text-css" formControlName="customerState"
+                   matInput
+                   type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <br>
+      <mat-card>
+        <mat-card-title>Policy Details</mat-card-title>
+      </mat-card>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">IMEI Number</mat-label>
+            <input (input)="policyModel.policyIMEINumber=$event.target.value" [value]="policyModel.policyIMEINumber"
+                   class="text-css" formControlName="policyIMEINumber" matInput
+                   maxlength="15"
+                   required type="number"/>
+            <mat-error>{{getErrorMessage("policyIMEINumber")}}</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Policy Status</mat-label>
+            <input (input)="policyModel.policyStatus=$event.target.value" [value]="policyModel.policyStatus"
+                   class="text-css" formControlName="policyStatus" matInput
+                   maxlength="100" required
+                   type="text"/>
+            <mat-error>Policy Status Can Not Be empty</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Coverage Type</mat-label>
+            <input (input)="policyModel.coverage=$event.target.value" [value]="policyModel.coverage" class="text-css"
+                   formControlName="coverage" matInput
+                   maxlength="100" required
+                   type="text"/>
+            <mat-error>Policy Coverage Type Can Not Be empty</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Policy Start Date</mat-label>
+            <input (input)="policyModel.policyStartDate=$event.target.value" [matDatepicker]="policyStartDate"
+                   [value]="policyModel.policyStartDate"
+                   class="text-css" formControlName="policyStartDate"
+                   matInput required/>
+            <mat-datepicker-toggle [for]="policyStartDate" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #policyStartDate></mat-datepicker>
+            <mat-error>Policy start date can not be empty</mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Policy End Date</mat-label>
+            <input (input)="policyModel.policyEndDate=$event.target.value" [matDatepicker]="policyEndDate"
+                   [value]="policyModel.policyEndDate" class="text-css"
+                   formControlName="policyEndDate" matInput
+                   required type="text"/>
+            <mat-datepicker-toggle [for]="policyEndDate" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #policyEndDate></mat-datepicker>
+            <mat-error>Policy end date can not be empty</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Policy Tenure</mat-label>
+            <input (input)="policyModel.policyTenure=$event.target.value" [value]="policyModel.policyTenure"
+                   class="text-css" formControlName="policyTenure"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Device Serial No</mat-label>
+            <input (input)="policyModel.deviceSerialNo=$event.target.value" [value]="policyModel.deviceSerialNo"
+                   class="text-css" formControlName="deviceSerialNo" matInput
+                   maxlength="15"
+                   required type="text"/>
+            <mat-error>{{getErrorMessage("deviceSerialNo")}}</mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Device Model</mat-label>
+            <input (input)="policyModel.deviceModel=$event.target.value" [value]="policyModel.deviceModel"
+                   class="text-css" formControlName="deviceModel"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Device Make</mat-label>
+            <input (input)="policyModel.deviceMake=$event.target.value" [value]="policyModel.deviceMake"
+                   class="text-css" formControlName="deviceMake"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <br>
+      <mat-card>
+        <mat-card-title>Channel Information</mat-card-title>
+      </mat-card>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Store Name</mat-label>
+            <input (input)="policyModel.storeName=$event.target.value" [value]="policyModel.storeName" class="text-css"
+                   formControlName="storeName"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Store Promotion</mat-label>
+            <input (input)="policyModel.storePromotion=$event.target.value" [value]="policyModel.storePromotion"
+                   class="text-css" formControlName="storePromotion"
+                   matInput
+                   type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Store State</mat-label>
+            <input (input)="policyModel.storeState=$event.target.value" [value]="policyModel.storeState"
+                   class="text-css" formControlName="storeState"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Store City</mat-label>
+            <input (input)="policyModel.storeCity=$event.target.value" [value]="policyModel.storeCity" class="text-css"
+                   formControlName="storeCity"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <br>
+      <mat-card>
+        <mat-card-title>AIG Migrated Data</mat-card-title>
+      </mat-card>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Sales Person ID</mat-label>
+            <input (input)="policyModel.salesRepId=$event.target.value" [value]="policyModel.salesRepId"
+                   class="text-css" formControlName="salesRepId"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Sales Person Name</mat-label>
+            <input (input)="policyModel.salesRepName=$event.target.value" [value]="policyModel.salesRepName"
+                   class="text-css" formControlName="salesRepName"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <br>
+      <mat-card>
+        <mat-card-title>Invoice Information</mat-card-title>
+      </mat-card>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Invoice Number</mat-label>
+            <input (input)="policyModel.invoiceNo=$event.target.value" [value]="policyModel.invoiceNo" class="text-css"
+                   formControlName="invoiceNumber"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Product Name</mat-label>
+            <input (input)="policyModel.productName=$event.target.value" [value]="policyModel.productName"
+                   class="text-css" formControlName="productName"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+      <br>
+      <mat-card>
+        <mat-card-title>Handset Information</mat-card-title>
+      </mat-card>
+      <tr>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Device Type</mat-label>
+            <input (input)="policyModel.deviceType=$event.target.value" [value]="policyModel.deviceType"
+                   class="text-css" formControlName="deviceType"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <mat-label class="label-policy">Device Color</mat-label>
+            <input (input)="policyModel.deviceColor=$event.target.value" [value]="policyModel.deviceColor"
+                   class="text-css" formControlName="deviceColor"
+                   matInput type="text"/>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    <div>
+      <button class="div-padding-button" mat-button style="margin-left:0px !important" type="submit">Submit
+      </button>
+    </div>
+    <br>
+    <div *ngIf="response && response.status && response.status==='OK'">
+      <mat-card style="background-color: rgb(5, 252, 5)">
+        <mat-card-title *ngFor="let msg of response.message">{{msg}}</mat-card-title>
+      </mat-card>
+    </div>
+    <br>
+  </form>
+</div>

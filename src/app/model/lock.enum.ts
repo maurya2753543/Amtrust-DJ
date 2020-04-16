@@ -1,0 +1,5 @@
+export enum LockEnum {
+  CLAIM_LOCK_ID = 'CLAIM_LOCK_ID',
+  POLICY_LOCK_ID = 'POLICY_LOCK_ID',
+  REPAIR_LOCK_ID = 'REPAIR_LOCK_ID'
+}

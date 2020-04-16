@@ -1,0 +1,105 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<div>
+  <div style="width: 1000px; border:qpx soild #0000">
+    <h1 class="heading">
+      Audit Trail
+    </h1>
+  </div>
+  <br>
+  <div gdAreas="header | content" gdGap="16px" gdRows="auto auto">
+    <div gdArea="header">
+      <form [formGroup]="auditForm" (ngSubmit)="search()">
+        <div formGroupName="searchQuery">
+          <mat-card class="example-card" style="background:#f6f6f6;">
+            <table>
+              <tr>
+                <td>
+                  <mat-form-field style="width: 450px;">
+                    <mat-label>Module </mat-label>
+                    <mat-select formControlName="searchType">
+                      <mat-option value="policy" disabled>Policy</mat-option>
+                      <mat-option value="claim">Claim</mat-option>
+                      <mat-option value="repair">Repair</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <div [hidden]="!policyAuditFlag">
+                  <mat-form-field style="width: 450px;">
+                    <mat-label>Policy Number</mat-label>
+                    <input matInput type="text" maxlength="200" [value]="auditSearch.policyNumber"
+                      (input)="auditSearch.policyNumber=$event.target.value" />
+                  </mat-form-field>
+                </div>
+                <div [hidden]="!claimAuditFlag">
+                  <mat-form-field style="width: 450px;">
+                    <mat-label>Claim Number</mat-label>
+                    <input matInput type="text" [value]="auditSearch.claimNumber"
+                      (input)="auditSearch.claimNumber=$event.target.value" />
+                  </mat-form-field><br>
+                </div>
+                <div [hidden]="!repairAuditFlag">
+                  <mat-form-field style="width: 450px;">
+                    <mat-label>Repair ID</mat-label>
+                    <input matInput type="text" [value]="auditSearch.repairId"
+                      (input)="auditSearch.repairId=$event.target.value" />
+                  </mat-form-field><br>
+                </div>
+              </tr>
+              <tr>
+                <mat-form-field style="width: 450px;">
+                  <mat-label>User</mat-label>
+                  <input matInput type="text" [value]="auditSearch.user"
+                    (input)="auditSearch.user=$event.target.value" />
+                </mat-form-field>
+              </tr>
+              <div>
+                <button mat-button type="search" class="div-padding-button" style="margin-left:0px !important">
+                  Search
+                </button>
+              </div>
+              <br>
+            </table>
+          </mat-card>
+        </div>
+
+        <br><br><br>
+      </form>
+    </div>
+  </div>
+
+  <br>
+
+  <div gdArea="content" *ngIf="books.length>0" style="width:1200; display: block !important;">
+    <mat-grid-list cols="6" rowHeight="4:1" [style.background-color]="'#E5E3E3'" *ngIf="books">
+      <mat-grid-tile><b>Date Time</b></mat-grid-tile>
+      <mat-grid-tile><b>Action</b></mat-grid-tile>
+      <mat-grid-tile><b>User</b></mat-grid-tile>
+      <mat-grid-tile style="width: 10%"><b>Module</b></mat-grid-tile>
+      <mat-grid-tile><b>Key</b></mat-grid-tile>
+      <mat-grid-tile><b>Changes</b></mat-grid-tile>
+    </mat-grid-list>
+    <div *ngIf="books">
+      <div class="div-tile" *ngFor="let book of books">
+        <mat-grid-list class="grid-column" cols="6" rowHeight="3:1" gutterSize="1px">
+          <mat-grid-tile class="mgt col-lg-4">{{book.DateTime}}</mat-grid-tile>
+          <mat-grid-tile class="mgt col-lg-4">{{book.Action}}</mat-grid-tile>
+          <mat-grid-tile class="mgt col-lg-4">{{book.User}}</mat-grid-tile>
+          <mat-grid-tile class="mgt col-lg-4">{{book.Module}}</mat-grid-tile>
+          <mat-grid-tile class="mgt col-lg-8">{{book.Key}}</mat-grid-tile>
+          <mat-grid-tile class="mgt col-lg-4">
+            <span style="cursor: pointer;">
+              <!--<button mat-button (click)="viewClaim(claim)">{{claim.repairStatus}}</button>-->
+              <button mat-button (click)="viewChanges(book)" class="repair-btn">
+                <span>View Changes</span>
+              </button>
+            </span>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+    </div>
+  </div>
+</div>

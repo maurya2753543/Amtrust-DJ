@@ -1,0 +1,40 @@
+.div-padding-batch {
+    margin-top: 10px;
+    color: grey;
+    font-size: larger;
+}
+
+table {
+    padding-top: 50px;
+}
+
+table th {
+    text-align: center;
+    background-color: darkgrey;
+    color: white;
+    padding: 4px 30px 4px 8px;
+    margin-left: 20px;
+    width: auto;
+}
+
+table td:nth-child(odd) {
+    text-align: center;
+    width: fit-content;
+    background-color: lightgray;
+}
+
+table td:nth-child(even) {
+    text-align: center;
+    width: fit-content;
+    background-color: lavender;
+}
+
+.fileUploadCss {
+    height: 20px;
+    margin-top: 20px;
+    margin-left: 1px;
+    color: white;
+    background-color: darkgrey;
+    padding-bottom: 3px;
+    padding-left: 3px;
+}

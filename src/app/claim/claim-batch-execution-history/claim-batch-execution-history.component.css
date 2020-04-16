@@ -1,0 +1,33 @@
+table th {
+    text-align: center;
+    background-color: darkgrey;
+    color: white;
+    padding: 4px 30px 4px 8px;
+    margin-left: 20px;
+    width: auto;
+}
+
+table td:nth-child(odd) {
+    text-align: center;
+    width: fit-content;
+    background-color: lightgray;
+}
+
+table td:nth-child(even) {
+    text-align: center;
+    width: fit-content;
+    background-color: lavender;
+}
+
+#table-wrapper {
+    position: relative;
+}
+
+#table-scroll {
+    height: 400px;
+    overflow: auto;
+}
+
+#table-wrapper table {
+    width: 100%;
+}

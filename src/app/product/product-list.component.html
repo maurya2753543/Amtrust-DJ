@@ -1,0 +1,900 @@
+<div *ngIf="products" class="product-page-container">
+  <!-- start page container -->
+
+  <H1 id="product-title">{{ products.name }}</H1><!-- product name--> <span class="backButton"><button
+      (click)="goBack()" mat-button> Back </button></span>
+
+  <mat-card id="campaign-alert" style="background-color:#EFECEC">
+    <!-- start mat-card -->
+    <mat-accordion>
+      <mat-expansion-panel>
+        <!--start data product details-->
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Product Details</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Client: </strong>
+          </div>
+          <div class="rightCol">
+            <span>{{ products?.client?.name }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Insurer: </strong>
+          </div>
+          <div class="rightCol">
+            <span>{{ products?.insurerName }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Product status: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.productStatus">{{ products?.productStatus | titlecase | removeUnderscore }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Is product expiring? </strong>
+          </div>
+          <div class="rightCol">
+            <span>{{ products?.isExpiring | booleanPipe }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Start date for sales: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.startDateForSales"> {{ products.startDateForSales | date }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>End date for sales: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.endDateForSales"> {{ products.endDateForSales | date }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Subscription type: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.subscriptionType"> {{ products.subscriptionType | titlecase }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Subscription value: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.subscriptionValue"> {{ products.subscriptionValue }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Maximum subscription frequency: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.maximumSubscriptionFrequency">{{ products.maximumSubscriptionFrequency }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Subscription category: </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.subscriptionCategory">{{ products.subscriptionCategory | titlecase }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Tenure (in months): </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.tenureInMonths"> {{ products.tenureInMonths }}</span>
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Postpaid plan? </strong>
+          </div>
+          <div class="rightCol">
+            <span *ngIf="products.forPostpaidPlan">{{ products.forPostpaidPlan | booleanPipe }}</span>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <!--end data product details-->
+      <div class="spacer"></div>
+      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+        <!--start about the client-->
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>About the client</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Name: </strong>
+          </div>
+          <div class="rightCol">
+            {{ products.client.name }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Channel: </strong>
+          </div>
+          <div class="rightCol">
+            {{ products.client.channel }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Location: </strong>
+          </div>
+          <div class="rightCol">
+            {{ products.client.countryName }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Client product name: </strong>
+          </div>
+          <div class="rightCol">
+            {{ products.clientProductName }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Name: </strong>
+          </div>
+          <div class="rightCol">
+            {{ products.clientProductDescription }}
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <!--end data about the client-->
+      <div class="spacer"></div>
+      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+        <!--start product rules-->
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>Product Rules</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Claim limit config:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.claimLimitConfig | titlecase | removeUnderscore }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Claim count config:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.claimCountConfig | titlecase | removeUnderscore }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Settlement config: </strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.settlementConfig }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Tech support offered:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.techSupportOffered | booleanPipe }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Worldwide cover offered:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.worldwideCoverOffered | booleanPipe }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Replacement offered:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.replacementOffered | booleanPipe }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Excess fee chargeable for repair</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.chargeExcessFeeRepair | booleanPipe }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Excess fee chargeable for replacement</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.chargeExcessFeeBer | booleanPipe }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Excess fee repair config:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.excessFeeBerConfig }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Excess fee repair variable value:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.excessFeeRepairVariableValue }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Excess fee replacement variable value:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.excessFeeReplacementVariableValue }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Excess fee time limit (in days):</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.excessFeeTimeLimitInDays }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Logistics:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.logistics| removeUnderscore}}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Service level promise (in days):</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.serviceLevelPromiseInDays }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Salvage value:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.salvageValue }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Internal salvage rate:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.internalSalvageRate }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Waiting period for claim (in days):</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.waitingPeriodForClaimInDays }}
+          </div>
+        </div>
+        <div class="full full-row">
+          <div class="leftCol">
+            <strong>Reinsurance rate:</strong>
+          </div>
+          <div class="rightCol">
+            {{ products?.rules?.reinsuranceRate }}
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <!--end product rules-->
+    </mat-accordion>
+  </mat-card><!-- end mat-card -->
+</div><!-- end product-page-container-->
+
+<br>
+
+<div *ngIf="products && products.plans" class="product-page-container">
+  <!-- start product-page-container-->
+  <mat-card style="background-color:#EFECEC">
+    <!-- start mat-card -->
+    <h3>Plans</h3>
+    <div *ngFor="let plan of products.plans" class="plans">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <b>{{ plan.name }} - {{plan.deviceName }}</b>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="band-table core-table table-core-bg">
+          <h3>Core info</h3>
+          <table style="font-size: 1em">
+            <thead>
+              <tr>
+                <th>Coverage</th>
+                <th>Band number</th>
+                <th>Device price starting range</th>
+                <th>Device price ending range</th>
+                <th>Average Device Price</th>
+                <th>Sales mix rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td *ngIf="plan">{{ plan.coverageDesc }}</td>
+                <td *ngIf="plan">{{ plan.bandNo }} </td>
+                <td *ngIf="plan">{{ plan.devicePriceStartingRange | number: '0.2' }}</td>
+                <td *ngIf="plan">{{ plan.devicePriceEndingRange | number: '0.2' }}</td>
+                <td *ngIf="plan">{{ plan.averageDevicePrice | number: '0.2' }}</td>
+                <td *ngIf="plan">{{ plan.salesMixRate | number: '0.2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="band-table claim-frequency-table">
+          <h3>Claim frequency</h3>
+          <table style="font-size: 1em">
+            <thead>
+              <tr>
+                <th>Repair rate</th>
+                <th>BER rate</th>
+                <th>EW rate</th>
+                <th>EW BER rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td *ngIf="plan.claimFrequency">{{ plan.claimFrequency.repairRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.claimFrequency">{{ plan.claimFrequency.berRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.claimFrequency">{{ plan.claimFrequency.ewRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.claimFrequency">{{ plan.claimFrequency.ewBerRate | number: '0.2' }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="band-table claim-severity">
+          <h3>Claim severity</h3>
+          <table style="font-size: 1em">
+            <thead>
+              <tr>
+                <th>Repair rate</th>
+                <th>Repair value</th>
+                <th>BER rate</th>
+                <th>BER value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td *ngIf="plan.claimSeverity">{{ plan.claimSeverity.repairRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.claimSeverity">{{ plan.claimSeverity.repairValue | number: '0.2'}} </td>
+                <td *ngIf="plan.claimSeverity">{{ plan.claimSeverity.berRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.claimSeverity">{{ plan.claimSeverity.berValue | number: '0.2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="band-table excess-fees">
+          <h3>Excess Fee</h3>
+          <table style="font-size: 1em">
+            <thead>
+              <tr>
+                <th>Repair rate</th>
+                <th>Repair value</th>
+                <th>BER rate</th>
+                <th>BER value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td *ngIf="plan.excessFee">{{ plan.excessFee.repairRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.excessFee">{{ plan.excessFee.repairValue | number: '0.2'}} </td>
+                <td *ngIf="plan.excessFee">{{ plan.excessFee.berRate | number: '0.2' }}%</td>
+                <td *ngIf="plan.excessFee">{{ plan.excessFee.berValue | number: '0.2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="band-table claim-risk-table">
+          <h3 class="div-table">Claim risk</h3>
+          <div class="full full-row-bordered" *ngIf="plan.claimRisk.ewValue">
+            <div class="leftCol">
+              <strong>EW Repair value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.ewValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered" *ngIf="plan.claimRisk.ewBerValue">
+            <div class="leftCol">
+              <strong>EW BER value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.ewBerValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Repair value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.repairValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>BER value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.berValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Sub-total</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.subTotal | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Underwriting rate</strong>
+            </div>
+            <div class="rightCol">
+              <span>{{ plan?.claimRisk?.underwritingMarginRate | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Underwriting value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.underwritingMarginValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Technical rating value (exc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.claimRisk">{{ plan.claimRisk.technicalRatingValueExcInsuranceTax | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Technical rating value (exc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.claimRisk">{{ plan.claimRisk.technicalRatingRateExcInsuranceTax | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>LGT Value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.lgtValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>LGT Rate</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.lgtRate | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>DST Value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.dstValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>DST Rate</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.claimRisk">{{ plan.claimRisk.dstRate | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Technical rating value (inc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.claimRisk">{{ plan.claimRisk.technicalRatingValueIncInsuranceTax | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Technical rating value (inc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.claimRisk">{{ plan.claimRisk.technicalRatingRateIncInsuranceTax | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <div class="band-table cost-table">
+          <h3 class="div-table">Cost</h3>
+          <div class="full full-row-bordered" *ngIf="plan.cost.insuranceCostRateOfAverageDevicePriceExcInsuranceTax">
+            <div class="leftCol">
+              <strong>Insurance cost % (exc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost.insuranceCostRateOfAverageDevicePriceExcInsuranceTax">
+                {{ plan.cost.insuranceCostRateOfAverageDevicePriceExcInsuranceTax | number: '0.2' }}
+                %
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered" *ngIf="plan.cost.insuranceCostValueExcInsuranceTax">
+            <div class="leftCol">
+              <strong>Insurance cost value (exc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost.insuranceCostValueExcInsuranceTax">
+                {{ plan.cost.insuranceCostValueExcInsuranceTax | number: '0.2' }}
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Insurance cost % (inc insurance tax)</strong>
+            </div>
+            <div>
+              <span *ngIf="plan.cost.insuranceCostsRateOfAverageDevicePriceIncInsuranceTax">
+                {{ plan.cost.insuranceCostsRateOfAverageDevicePriceIncInsuranceTax | number: '0.2' }}
+                %
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Insurance cost value (inc insurance tax)</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost.insuranceCostsValueIncInsuranceTax">
+                {{ plan.cost.insuranceCostsValueIncInsuranceTax | number: '0.2' }}
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered" *ngIf="plan.cost.insuranceCostValueExcInsuranceTax">
+            <div class="leftCol">
+              <strong>Reinsurances fees value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost.reinsuranceFeesValue">{{ plan.cost.reinsuranceFeesValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered" *ngIf="plan.cost.insuranceCostValueExcInsuranceTax">
+            <div class="leftCol">
+              <strong>Reinsurance fees rate of retail price</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost.reinsuranceFeesRateOfRetailPrice">
+                {{ plan.cost.reinsuranceFeesRateOfRetailPrice | number: '0.2' }}
+                %
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered" *ngIf="plan.cost.corporateIncomeTaxRateForReinsurance">
+            <div class="leftCol">
+              <strong>Corporate income tax rate for re-insurance</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost.corporateIncomeTaxRateForReinsurance">
+                {{ plan.cost.corporateIncomeTaxRateForReinsurance | number: '0.2' }}
+                %
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered" *ngIf="plan.cost.corporateIncomeTaxValueForReinsurance">
+            <div class="leftCol">
+              <strong>Corporate income tax value for re-insurance</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost">{{ plan.cost.corporateIncomeTaxValueForReinsurance | number: '0.2'}}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="full full-row-bordered" *ngIf="plan.cost.contingencyInsuranceValue">
+            <div class="leftCol">
+              <strong>Contingency insurance value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost">{{ plan.cost.contingencyInsuranceValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Excess fee waiver for repair value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost">{{ plan.cost.excessFeeWaiverForRepairValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Claim admin value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost">{{ plan.cost.claimAdminValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Broker fee pre-transfer price value</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost">{{ plan.cost.brokerFeePreTransferPrice | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Total cost</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.cost">{{ plan.cost.costTotalValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <div *ngIf="plan.price" class="band-table pricing-table">
+          <h3 class="div-table">Pricing</h3>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Internal (AMS) margin without contingency cost</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price">{{ plan?.price?.internalMarginValueWithoutContingencyCost | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Internal (AMS) margin rate without contingency cost</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.internalMarginRateWithoutContingencyCost | number: '0.2' }}
+                %</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Internal (AMS) margin with contingency cost</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.internalMarginValueWithContingencyCost | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Internal (AMS) margin rate with contingency cost</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.internalMarginRateWithContingencyCost | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Transfer price</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.transferPriceValue | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Transfer price rate of retail price</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.transferPriceRateOfRetailPrice | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Transfer price rate of average price</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.transferPriceRateOfAverageDevicePrice | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Client margin rate - first client</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price">{{ plan?.price?.clientMarginPostTransferPriceRateOfRetailPrice__FirstClient | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Client margin - first client</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price">{{ plan?.price?.clientMarginPostTransferPriceValueOfRetailPrice__FirstClient | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Client margin rate - second client</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price">{{ plan?.price?.clientMarginPostTransferPriceRateOfRetailPrice__SecondClient | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Client margin value - second client</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price">{{ plan?.price?.clientMarginPostTransferPriceValueOfRetailPrice__SecondClient | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered"
+            *ngIf="plan.price.clientMarginPostTransferPriceRateOfRetailPrice__ThirdClient">
+            <div class="leftCol">
+              <strong>Client margin rate - third client</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price">{{ plan?.price?.clientMarginPostTransferPriceRateOfRetailPrice__ThirdClient | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered"
+            *ngIf="plan.price.clientMarginPostTransferPriceValueOfRetailPrice__ThirdClient">
+            <div class="leftCol">
+              <strong>Client margin value - third client</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan.price.clientMarginPostTransferPriceValueOfRetailPrice__ThirdClient">{{ plan?.price?.clientMarginPostTransferPriceValueOfRetailPrice__ThirdClient | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Retail price without tax</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.retailPriceValueWithoutTax | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Tax rate - (VAT)</strong>
+            </div>
+            <div class="rightCol">
+              <span>
+                {{ plan?.price?.taxRateVat  | number: '0.2' }}%
+              </span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Tax value - (VAT)</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.taxValueVat | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Tax rate - (GRT)</strong>
+            </div>
+            <div class="rightCol">
+              <span>{{ plan?.price?.taxRateGrt | number: '0.2' }}%</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Tax value - (GRT)</strong>
+            </div>
+            <div class="rightCol">
+              <span *ngIf="plan.price">{{ plan?.price?.taxValueGrt | number : '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="full full-row-bordered">
+            <div class="leftCol">
+              <strong>Retail price with tax</strong>
+            </div>
+            <div class="rightCol">
+              <span
+                *ngIf="plan?.price?.retailPriceValueWithTax">{{ plan?.price?.retailPriceValueWithTax | number: '0.2' }}</span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <div class="spacer"></div>
+    </div>
+  </mat-card><!-- end mat-card -->
+</div><!-- end product-page-container-->
+<br>

@@ -1,0 +1,33 @@
+<h2 mat-dialog-title style="font-weight:800">Notifications</h2>
+
+<div *ngIf="data && data.length>0;else noNotification">
+  <cdk-virtual-scroll-viewport [itemSize]="10" style="height: 400px!important;width:650px!important;">
+    <table>
+      <div *cdkVirtualFor="let row of data">
+        <tr>
+          <div [ngClass]="row.notificationRead && row.notificationRead.includes(userId)? 'read': 'unread'"><a
+              (click)="fetchClaimDetails(row)" class="navMenu" hideIfUnauthorized permission="Read">
+              <td style="width:1000px!important;">{{row.claimNo}}
+                <span *ngIf="row.assignee && row.assignee===userId; else elseBlock">
+                  is assigned to you by {{row.updateBy}} on {{row.updateDate}}
+                </span>
+                <ng-template #elseBlock>
+                  <span>has been updated by {{row.updateBy}} on {{row.updateDate}}</span>
+                </ng-template>
+              </td>
+            </a>
+          </div>
+        </tr>
+      </div>
+    </table>
+  </cdk-virtual-scroll-viewport>
+</div>
+<ng-template #noNotification>
+  <p>
+    You have no notifications at this time.
+  </p>
+</ng-template>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

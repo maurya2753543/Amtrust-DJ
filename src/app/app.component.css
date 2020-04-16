@@ -1,0 +1,49 @@
+
+.tab-icon {
+    margin-right: 8px;
+}
+
+.leftHalf {
+    left: 0%;
+    float: left;
+    position: relative;
+}
+
+.rightHalf {
+    right: 0%;
+    float: left;
+    margin-left: 10px;
+    position: relative;
+}
+
+.navMenu {
+    color: rgb(0, 0, 0);
+    font-weight: 400;
+    font-size: larger;
+    padding-left: 10px;
+    text-decoration: none;
+    font-size: 17px;
+
+}
+
+.mat-list-item {
+    margin-top: 50px !important;
+    list-style: none;
+}
+
+.mat-list-item:hover a {
+    background-color: #2EB5C7;
+    color: white !important;
+
+}
+
+.mat-list-item:hover {
+    background-color: #2EB5C7;
+    color: white !important;
+
+}
+
+.mat-badge-medium.mat-badge-overlap.mat-badge-after .mat-badge-content {
+    right: -12px;
+    margin-top: 8px;
+}

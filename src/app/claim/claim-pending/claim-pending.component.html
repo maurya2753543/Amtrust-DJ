@@ -1,0 +1,260 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<div>
+  <h1 class="heading">
+    Search Claims
+  </h1>
+</div>
+<div class="div-padding">
+  <div>
+    <button (click)="displayCriteria()" class="div-padding-button" mat-button
+      style="margin-top: 10px !important;">Filter
+      Criteria
+    </button>
+  </div>
+  <div gdAreas="header | content" gdGap="16px" gdRows="auto auto">
+    <form (ngSubmit)="search()">
+      <div *ngIf="showFilter">
+        <div gdArea="header">
+          <div *ngIf="response && response.status && response.status !== 'OK'">
+            <mat-error>
+              <!--<li><b>{{response.message}}</b></li>-->
+              <li><b>{{response.message[0]}}</b></li>
+            </mat-error>
+          </div>
+          <mat-card class="example-card">
+            <div class="overlay">
+              <mat-spinner *ngIf="isLoading" [diameter]="200" accent class="loader"></mat-spinner>
+            </div>
+            <table>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Policy No</mat-label>
+                    <input (input)="claimSearch.policyNo=$event.target.value" [value]="claimSearch.policyNo" matInput
+                      maxlength="200" type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Claim No</mat-label>
+                    <input (input)="claimSearch.claimNo=$event.target.value" [value]="claimSearch.claimNo" matInput
+                      maxlength="200" type="text" />
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Customer name</mat-label>
+                    <input (input)="claimSearch.customerName=$event.target.value" [value]="claimSearch.customerName"
+                      matInput type="text" />
+                  </mat-form-field>
+                </td>
+
+                <td>
+                  <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input (input)="claimSearch.customerEmail=$event.target.value" [value]="claimSearch.customerEmail"
+                      class="text-css" matInput type="text" />
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Customer Identification Number</mat-label>
+                    <input (input)="claimSearch.customerId=$event.target.value" [value]="claimSearch.customerId"
+                      matInput type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Phone number</mat-label>
+                    <input (input)="claimSearch.customerContact=$event.target.value"
+                      [value]="claimSearch.customerContact" matInput type="text" />
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>IMEI</mat-label>
+                    <input (input)="claimSearch.imei=$event.target.value" [value]="claimSearch.imei" matInput
+                      type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Country</mat-label>
+                    <mat-select [(value)]="claimSearch.country" placeholder="Country">
+                      <mat-option value="">Select Country</mat-option>
+                      <span *ngFor="let countryItem of countries">
+                        <mat-option value="{{countryItem.twoCharCode}}">{{ countryItem.name }}</mat-option>
+                      </span>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Status</mat-label>
+                    <mat-select (selectionChange)="setStatusFromLocal($event.value)" [(value)]="claimSearch.statusCode"
+                      placeholder="Status">
+                      <mat-option value="">Select Status</mat-option>
+                      <span *ngFor="let statusItem of claimStatus">
+                        <mat-option value="{{ statusItem.code }}">{{ statusItem.name }}</mat-option>
+                      </span>
+                    </mat-select>
+                    <!--<mat-hint align="end">Here's the dropdown arrow ^</mat-hint>-->
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Sub Status</mat-label>
+                    <mat-select [(value)]="claimSearch.subStatusCode" placeholder="Sub Status">
+                      <mat-option value="">Select SubStatus</mat-option>
+                      <span *ngFor="let claimsubstatus of claimSubStatus">
+                        <mat-option value="{{ claimsubstatus.code }}">{{ claimsubstatus.name }}</mat-option>
+                      </span>
+                    </mat-select>
+                    <!--<mat-hint align="end">Here's the dropdown arrow ^</mat-hint>-->
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Client Name</mat-label>
+                    <mat-select (selectionChange)="setAssignee($event.value)" [(value)]="claimSearch.partnerId">
+                      <mat-option value="">Select client name</mat-option>
+                      <div *ngFor="let clientDetail of clientDetails">
+                        <mat-option value={{clientDetail.partnerId}}>{{clientDetail.name}}
+                        </mat-option>
+                      </div>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="claimSearch.listOfAssignees != null" [hidden]="showAssignees && claimSearch.partnerId == ''">
+                  <mat-form-field>
+                    <mat-label>Assignee</mat-label>
+                    <mat-select [(value)]="claimSearch.assigneesSearched" multiple>
+                      <mat-option *ngFor="let assignee of claimSearch.listOfAssignees" [value]="assignee">
+                        {{assignee.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="claimSearch.listOfAssignees == null" [hidden]="showAssignees">
+                  <mat-form-field>
+                    <mat-label>Assignee</mat-label>
+                    <mat-select>
+                      <mat-option>N/A</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label class="label-claim">Date of Creation</mat-label>
+                    <input (dateChange)="selectCreationDate($event)" [(value)]="claimSearch.dateCreated"
+                      [matDatepicker]="dateCreated" [max]="maxDate" class="text-css" matInput />
+                    <mat-datepicker-toggle [for]="dateCreated" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #dateCreated [disabled]='hideButton'></mat-datepicker>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <div>
+                <button class="div-padding-button" mat-button style="margin-left:0px !important" type="search">Search
+                </button>
+              </div>
+              <br>
+            </table>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+
+
+    <div gdArea="content">
+      <div *ngIf="response && response.status && response.status === 'OK'" style="float: right;">
+        <mat-label>Items Per Page:</mat-label>
+        <mat-form-field style="width: 150px!important">
+          <mat-select
+            (selectionChange)="appService.paginateSearch($event , itemsPerPage , claimSearch , this.findClaims.bind(this) , this , true)"
+            [(value)]="itemsPerPage">
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <br><br><br>
+      <mat-grid-list *ngIf="response && response.status && response.status === 'OK'"
+        [style.background-color]="'#E5E3E3'" cols="10" rowHeight="8:3">
+        <mat-grid-tile><b>Claim No</b></mat-grid-tile>
+        <mat-grid-tile><b>Customer Name</b></mat-grid-tile>
+        <mat-grid-tile><b>Phone no</b></mat-grid-tile>
+        <mat-grid-tile><b>IMEI/Serial No</b></mat-grid-tile>
+        <mat-grid-tile><b>ID No.</b></mat-grid-tile>
+        <mat-grid-tile><b>Policy No</b></mat-grid-tile>
+        <mat-grid-tile><b>Status</b></mat-grid-tile>
+        <mat-grid-tile><b>Sub Status</b></mat-grid-tile>
+        <mat-grid-tile><b>Action</b></mat-grid-tile>
+        <mat-grid-tile><b>Repair</b></mat-grid-tile>
+        <!--<mat-grid-tile><b>Status</b></mat-grid-tile>-->
+      </mat-grid-list>
+      <div *ngIf="response && response.content">
+        <div *ngIf="response && response.status">
+          <img (load)="loader()" [hidden]="true" src="assets/images/file.png" />
+        </div>
+        <div class="div-tile"
+          *ngFor="let claim of response.content.resultList | paginate: { id:'claim',itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: response.content.totalRecordCount}">
+          <mat-grid-list cols="10" rowHeight="8:3">
+            <a [routerLink]="['detail']" [state]="[claim,claimSearch,currentPage]" class="navMenu" hideIfUnauthorized
+              permission="Read">
+              <mat-grid-tile style="font-size:12px;">{{claim.claimNo}}</mat-grid-tile>
+              <mat-grid-tile style="font-size:12px;">{{claim.customerName}}</mat-grid-tile>
+              <mat-grid-tile style="font-size:12px;">{{claim.claimantContact}}</mat-grid-tile>
+              <mat-grid-tile style="font-size:12px;">{{claim.imei}}</mat-grid-tile>
+              <mat-grid-tile style="font-size:12px;">{{claim.customerIdentityNo}}</mat-grid-tile>
+              <mat-grid-tile style="font-size:12px;">{{claim.policyNo}}</mat-grid-tile>
+              <mat-grid-tile>{{claim.status}}</mat-grid-tile>
+              <mat-grid-tile style="font-size:12px;">{{claim.claimSubStatus}}</mat-grid-tile>
+              <mat-grid-tile>
+                <mat-chip-list>
+                  <mat-chip [style.background-color]="'#2EB5C7'">
+                    <a [routerLink]="['detail']" [state]="[claim,claimSearch,currentPage]" class="navMenu"
+                      hideIfUnauthorized permission="Read">Edit</a></mat-chip>
+                </mat-chip-list>
+              </mat-grid-tile>
+            </a>
+            <mat-grid-tile>
+              <span style="cursor: pointer;">
+                <!--<button mat-button (click)="viewClaim(claim)">{{claim.repairStatus}}</button>-->
+                <button (click)="viewClaim(claim)" class="repair-btn" mat-button>
+                  <span>{{claim.repairStatusDescription}}</span>
+                </button>
+              </span>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+        <div>
+          <mat-grid-list cols="1" rowHeight="70px">
+            <mat-grid-tile>
+              <pagination-controls id="claim"
+                (pageChange)="appService.paginateSearch($event , itemsPerPage , claimSearch , this.findClaims.bind(this) , this)"
+                maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous"
+                nextLabel="Next" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+                screenReaderCurrentLabel="You're on page">
+              </pagination-controls>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,30 @@
+export interface FlowableTask {
+  id: string;
+  url: string;
+  owner: string;
+  assignee: string;
+  delegationState: string;
+  name: string;
+  description: string;
+  createTime: string;
+  dueDate: string;
+  priority: number;
+  suspended: string;
+  claimTime: string;
+  taskDefinitionKey: string;
+  scopeDefinitionId: string;
+  scopeId: string;
+  scopeType: string;
+  tenantId: string;
+  category: string;
+  formKey: string;
+  parentTaskId: string;
+  parentTaskUrl: string;
+  executionId: string;
+  executionUrl: string;
+  processInstanceId: string;
+  processInstanceUrl: string;
+  processDefinitionId: string;
+  processDefinitionUrl: string;
+  variables: any;
+}

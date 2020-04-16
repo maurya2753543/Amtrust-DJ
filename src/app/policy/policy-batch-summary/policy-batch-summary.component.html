@@ -1,0 +1,47 @@
+<h1 class="heading">
+  Batch Summary Progress
+</h1>
+<form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
+  <div style="padding-top: 5px !important;">
+    <mat-grid-list (window:resize)="onResize($event)"
+                   *ngIf="batchSummary && batchSummary.status && batchSummary.status==='OK'" [cols]="breakpoint"
+                   [style.background]="'#E5E3E3'"
+                   rowHeight="4:1">
+      <mat-grid-tile><b>Batch-Id</b></mat-grid-tile>
+      <mat-grid-tile><b>TotalRecordsUploaded</b></mat-grid-tile>
+      <mat-grid-tile><b>TotalRecordsSuccess</b></mat-grid-tile>
+      <mat-grid-tile><b>TotalRecordsFailure</b></mat-grid-tile>
+      <mat-grid-tile><b>BatchUploadDate</b></mat-grid-tile>
+      <mat-grid-tile><b>JobStatus</b></mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  <div *ngIf="batchSummary && batchSummary.status && batchSummary.status==='OK';else batchMessage" class="div-tile">
+    <mat-grid-list (window:resize)="onResize($event)" [cols]="breakpoint" rowHeight="3:1">
+      <mat-grid-tile>{{batchSummary.obj.batchId}}</mat-grid-tile>
+      <mat-grid-tile>{{batchSummary.obj.totalRecordsUploaded}}</mat-grid-tile>
+      <mat-grid-tile>{{batchSummary.obj.totalValidationSuccess}}</mat-grid-tile>
+      <mat-grid-tile>{{batchSummary.obj.totalValidationFailure}}</mat-grid-tile>
+      <mat-grid-tile>{{batchSummary.obj.batchUploadDate}}</mat-grid-tile>
+      <mat-grid-tile>{{batchSummary.obj.jobStatus}}</mat-grid-tile>
+      <mat-divider></mat-divider>
+    </mat-grid-list>
+    <div *ngIf=" batchSummary && batchSummary.obj && batchSummary.obj.jobStatus &&
+            batchSummary.obj.jobStatus==='In Progress'">
+      <button (click)=" onSubmit()" class="div-padding-button" mat-button>Refresh record</button>
+    </div>
+    <div *ngIf="batchSummary && batchSummary.obj && batchSummary.obj.jobStatus &&
+            batchSummary.obj.jobStatus==='complete' && batchSummary.obj.totalValidationFailure>0">
+      <button (click)="downloadCSV()"
+              class="div-padding-button" mat-button>Download Error Logs
+      </button>
+    </div>
+  </div>
+  <ng-template #batchMessage>
+    <div *ngIf="batchSummary && batchSummary.message">
+      <mat-error *ngIf="batchSummary && batchSummary.status && batchSummary.status==='ERROR'">
+        <span *ngFor="let msg of batchSummary.message"><b>{{msg}}</b></span>
+      </mat-error>
+    </div>
+
+  </ng-template>
+</form>

@@ -1,0 +1,210 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" color="#FFFFFF" fullScreen="false" size="large" type="ball-fussion">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<div>
+  <h1 class="heading">
+    Search Policies
+  </h1>
+</div>
+<div class="div-padding">
+  <div>
+    <button (click)="displayCriteria()" class="div-padding-button" mat-button
+      style="margin-top: 10px !important;">Filter
+      Criteria
+    </button>
+  </div>
+  <div gdAreas="header | content" gdGap="16px" gdRows="auto auto">
+    <form (ngSubmit)="search()">
+      <div *ngIf="showFilter">
+        <div gdArea="header">
+          <mat-card class="example-card">
+            <table>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Policy No</mat-label>
+                    <input (input)="policySearch.policyNumber=$event.target.value" [value]="policySearch.policyNumber"
+                      matInput maxlength="200" type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Coverage</mat-label>
+                    <mat-select [(value)]="policySearch.coverage">
+                      <mat-option value="">Select Coverage</mat-option>
+                      <mat-option value="ADLD">ADLD</mat-option>
+                      <mat-option value="ADLD/EW">ADLD/EW</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Customer Name</mat-label>
+                    <input (input)="policySearch.customerName=$event.target.value" [value]="policySearch.customerName"
+                      matInput type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Customer Phone No</mat-label>
+                    <input (input)="policySearch.custMobileNumber=$event.target.value"
+                      [value]="policySearch.custMobileNumber" class="text-css" matInput type="text" />
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>IMEI</mat-label>
+                    <input (input)="policySearch.policyIMEINumber=$event.target.value"
+                      [value]="policySearch.policyIMEINumber" matInput type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Status</mat-label>
+                    <mat-select [(value)]="policySearch.policyStatus">
+                      <mat-option value="">Select Status</mat-option>
+                      <mat-option value="Active">Active</mat-option>
+                      <mat-option value="InActive">InActive</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Identification No.</mat-label>
+                    <input (input)="policySearch.customerId=$event.target.value" [value]="policySearch.customerId"
+                      class="text-css" matInput type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Customer Email</mat-label>
+                    <input (input)="policySearch.customerEmail=$event.target.value" [value]="policySearch.customerEmail"
+                      class="text-css" matInput type="text" />
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Client Name</mat-label>
+                    <mat-select [(value)]="policySearch.partnerId">
+                      <mat-option value="">Select client name</mat-option>
+                      <div *ngFor="let clientDetail of clientDetails">
+                        <mat-option value={{clientDetail.partnerId}}>{{clientDetail.name}}
+                        </mat-option>
+                      </div>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Client Transaction No</mat-label>
+                    <input (input)="policySearch.clientTransactionNumber=$event.target.value"
+                      [value]="policySearch.clientTransactionNumber" class="text-css" matInput type="text" />
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-form-field>
+                    <mat-label>Date of Creation</mat-label>
+                    <input (dateChange)="selectCreationDate($event)" [(value)]="policySearch.dateCreated"
+                      [matDatepicker]="dateCreated" [max]="maxDate" matInput />
+                    <mat-datepicker-toggle [for]="dateCreated" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #dateCreated [disabled]='hideButton'></mat-datepicker>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <div>
+                <button class="div-padding-button" mat-button style="margin-left:0px !important;float:right !important;"
+                  type="search">Search Policies
+                </button>
+              </div>
+              <br>
+            </table>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+    <div gdArea="content">
+      <div *ngIf="response && response.status && response.status==='OK'" style="float:right;">
+        <mat-label>Items Per Page:</mat-label>
+        <mat-form-field style="width: 150px!important;">
+          <mat-select
+            (selectionChange)="appservice.paginateSearch($event , itemsPerPage , policySearch , this.findPolicies.bind(this) , this , true)"
+            [(value)]="itemsPerPage">
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <br><br><br>
+      <mat-grid-list *ngIf="response && response.status && response.status==='OK'" [style.background-color]="'#E5E3E3'"
+        cols="8" rowHeight="4:1">
+        <mat-grid-tile><b>Policy No</b></mat-grid-tile>
+        <mat-grid-tile><b>Customer Name</b></mat-grid-tile>
+        <mat-grid-tile><b>Customer Email</b></mat-grid-tile>
+        <mat-grid-tile><b>IMEI</b></mat-grid-tile>
+        <mat-grid-tile><b>Identification No</b></mat-grid-tile>
+        <mat-grid-tile><b>Coverage</b></mat-grid-tile>
+        <mat-grid-tile><b>Customer Mobile</b></mat-grid-tile>
+        <mat-grid-tile><b>Status</b></mat-grid-tile>
+      </mat-grid-list>
+      <div *ngIf="response && response.status">
+        <img (load)="loader()" [hidden]="true" src="assets/images/file.png" />
+      </div>
+      <div *ngIf="response && response.status && response.status==='OK' && response.obj">
+        <div class="div-tile"
+          *ngFor="let policy of response.obj.resultList | paginate: {id:policyId,itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: response.obj.totalRecordCount}">
+          <mat-grid-list class="grid-column" cols="8" rowHeight="3:1" gutterSize="1px">
+            <a class="navMenu" [routerLink]="[
+              'detail'
+            ]" [state]="[policy,policySearch,currentPage]" hideIfUnauthorized permission="Read">
+              <mat-grid-tile>{{policy.policyNumber}}</mat-grid-tile>
+              <mat-grid-tile>
+                <!--When customer's firstname is blank -->
+                <span *ngIf="policy.customerName === ''; else lastName">
+                  {{policy.customerLastName}}
+                </span>
+                <!-- Otherwise fullname -->
+                <ng-template #lastName>
+                  <span>
+                    {{policy.customerName}} {{policy.customerLastName}}
+                  </span>
+                </ng-template>
+              </mat-grid-tile>
+              <mat-grid-tile>{{policy.customerEmail}}</mat-grid-tile>
+              <mat-grid-tile>{{policy.policyIMEINumber}}</mat-grid-tile>
+              <mat-grid-tile>{{policy.custIdNumber}}</mat-grid-tile>
+              <mat-grid-tile>{{policy.coverage}}</mat-grid-tile>
+              <mat-grid-tile>{{policy.custMobileNumber}}</mat-grid-tile>
+            </a>
+            <mat-grid-tile>
+              <mat-chip-list>
+                <mat-chip class="chip" *ngIf="policy.policyStatus != null">{{policy.policyStatus}}</mat-chip>
+              </mat-chip-list>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+        <div>
+          <mat-grid-list cols="1" rowHeight="70px">
+            <mat-grid-tile>
+              <pagination-controls id="{{policyId}}"
+                (pageChange)="appservice.paginateSearch($event , itemsPerPage , policySearch , this.findPolicies.bind(this) , this)"
+                maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous"
+                nextLabel="Next" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+                screenReaderCurrentLabel="You're on page">
+              </pagination-controls>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </div>
+  </div>

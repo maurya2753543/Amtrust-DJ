@@ -1,0 +1,42 @@
+<h1 class="heading">
+  AMS Claim Batch Summary
+</h1>
+<div class="div-padding">
+  <div>
+    <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
+      <div class="div-padding-batch">
+        <label class="label">Enter Batch-Id:</label>
+        <input formControlName="batchIdNumber" style="padding-left: 10px;margin-left: 10px;" type="text"/>
+      </div>
+      <div class="div-padding-batch">
+        <button class="div-padding-button" style="margin-left: 0px !important;" type="submit">Search Details
+        </button>
+      </div>
+      <div *ngIf="batchSummary && batchSummary.status && batchSummary.status==='Success'">
+        <table>
+          <tr>
+            <th style="width: 100px;">Batch Id</th>
+            <th>Total Records Uploaded</th>
+            <th>Total Records Success</th>
+            <th>Total Records Failure</th>
+            <th style="width: 100px;">Batch Upload Date</th>
+            <th>Job Status</th>
+          </tr>
+          <tr>
+            <td>{{batchSummary.obj.batchId}}</td>
+            <td>{{batchSummary.obj.totalRecordsUploaded}}</td>
+            <td>{{batchSummary.obj.totalValidationSuccess}}</td>
+            <td>{{batchSummary.obj.totalValidationFailure}}</td>
+            <td>{{batchSummary.obj.batchUploadDate}}</td>
+            <td>{{batchSummary.obj.jobStatus}}</td>
+          </tr>
+        </table>
+      </div>
+      <!--ng-template #batchMessage>
+          <div [class.fileUploadCss]="batchSummary && batchSummary.status==='Failed'">
+              {{batchSummary.message}}
+          </div>
+      </ng-template-->
+    </form>
+  </div>
+</div>
